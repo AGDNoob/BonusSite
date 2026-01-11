@@ -50,13 +50,9 @@
     .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
     @keyframes shimmer{0%{background-position:200% 0} 100%{background-position:-200% 0}}
     .skeleton-row{height:52px}
-    tbody tr{transition:all .2s ease;opacity:0;animation:fadeIn .3s ease forwards}
+    tbody tr{transition:all .2s ease}
+    .fade-in{opacity:0;animation:fadeIn .3s ease forwards}
     @keyframes fadeIn{to{opacity:1}}
-    tbody tr:nth-child(1){animation-delay:.05s}
-    tbody tr:nth-child(2){animation-delay:.1s}
-    tbody tr:nth-child(3){animation-delay:.15s}
-    tbody tr:nth-child(4){animation-delay:.2s}
-    tbody tr:nth-child(5){animation-delay:.25s}
     .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:16px}
     .stat-card{padding:14px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);text-align:center}
     .stat-value{font-size:clamp(18px,5vw,22px);font-weight:900;color:var(--accent)}
@@ -189,12 +185,16 @@
         ? allData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
         : allData;
 
+      console.log('Search term:', searchTerm);
+      console.log('Filtered players:', filtered.length);
+      console.log('Sample data:', filtered[0]);
+
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden 🔍</td></tr>';
         return;
       }
 
-      tbody.innerHTML = filtered.map((p, idx) => {
+      const html = filtered.map((p, idx) => {
         const badge = p.rank <= 3 
           ? `<span class="badge b${p.rank}">${p.rank}</span>`
           : p.rank;
@@ -203,13 +203,16 @@
           ? 'highlight' 
           : '';
         
-        return `<tr class="${highlightClass}" style="animation-delay:${Math.min(idx * 0.03, 0.5)}s">
+        return `<tr class="${highlightClass}">
           <td class="rank">${badge}</td>
           <td class="name">${p.name}</td>
           <td class="points">${p.points}</td>
           <td class="attacks">${attacks}</td>
         </tr>`;
       }).join('');
+      
+      console.log('HTML length:', html.length);
+      tbody.innerHTML = html;
     }
 
     function updateSidebar() {

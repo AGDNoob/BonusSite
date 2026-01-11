@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <h1>Test Seite</h1>
+    <input type="text" id="search" placeholder="Suche...">
+    <div id="results"></div>
+    
+    <script>
+        let data = [];
+        
+        async function loadData() {
+            try {
+                const response = await fetch('data/2026-01.json');
+                const json = await response.json();
+                data = json.players;
+                console.log('Loaded data:', data.length, 'players');
+                render('');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = 'ERROR: ' + error.message;
+            }
+        }
+        
+        function render(search) {
+            const filtered = search 
+                ? data.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+                : data;
+            
+            console.log('Search:', search, 'Found:', filtered.length);
+            
+            const html = filtered.map(p => 
+                `<div>${p.rank}. ${p.name} - ${p.points} Punkte (${p.attacks} Angriffe)</div>`
+            ).join('');
+            
+            document.getElementById('results').innerHTML = html || 'Keine Ergebnisse';
+        }
+        
+        document.getElementById('search').addEventListener('input', e => {
+            render(e.target.value);
+        });
+        
+        loadData();
+    </script>
+</body>
+</html>
