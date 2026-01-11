@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CWL Bonus – Rangliste</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#101826; --text:#eaf0ff; --muted:#a9b4cc;
+      --line:rgba(255,255,255,.10); --accent:#0a84ff; --gold:#f5c542; --silver:#c7d2e3; --bronze:#d08c5a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:radial-gradient(1200px 700px at 10% 10%, #142044 0%, var(--bg) 55%);color:var(--text);min-height:100vh}
+    .wrap{max-width:1200px;margin:0 auto;padding:20px 16px}
+    .header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
+    .title{font-size:clamp(20px,5vw,26px);font-weight:800;letter-spacing:.2px;line-height:1.2}
+    .subtitle{color:var(--muted);font-size:clamp(11px,3vw,13px);margin-top:6px;line-height:1.4}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+    .table-container{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:500px}
+    thead th{font-size:clamp(10px,2.5vw,12px);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:left;padding:14px 12px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);white-space:nowrap}
+    tbody td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:clamp(13px,3.5vw,15px)}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    .rank{width:70px;font-weight:800}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:clamp(10px,2.5vw,12px);color:var(--muted);white-space:nowrap}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+    .points{font-variant-numeric:tabular-nums;font-weight:800}
+    .attacks{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+    .badge{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:10px;font-weight:900;color:#0b0f17;font-size:clamp(13px,3.5vw,15px)}
+    .b1{background:var(--gold)} .b2{background:var(--silver)} .b3{background:var(--bronze)}
+    .name{font-weight:750;word-break:break-word}
+    .note{padding:14px 12px;color:var(--muted);font-size:clamp(10px,2.5vw,12px);border-top:1px solid var(--line);line-height:1.5}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .side{display:flex;flex-direction:column;gap:12px}
+    .side .box{padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+    .side h3{margin:0 0 10px;font-size:clamp(11px,3vw,13px);color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .side .big{font-size:clamp(20px,5vw,24px);font-weight:900;word-break:break-word}
+    .side .small{color:var(--muted);font-size:clamp(11px,3vw,12px);line-height:1.6}
+    .controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+    .search-box,.month-select{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:clamp(13px,3.5vw,14px);outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
+    .search-box{flex:1;min-width:200px;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Cpath d='M11.7 10.3l3.6 3.6-1.4 1.4-3.6-3.6A6 6 0 1112 6a6 6 0 01-.3 4.3zM6 10a4 4 0 100-8 4 4 0 000 8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
+    .search-box:focus{border-color:var(--accent);background-color:rgba(10,132,255,.08);box-shadow:0 0 0 3px rgba(10,132,255,.12)}
+    .month-select{min-width:160px;cursor:pointer;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Crect x='3' y='4' width='10' height='10' rx='1' stroke='%23a9b4cc' fill='none'/%3E%3Cpath d='M5 2v3M11 2v3M3 7h10'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
+    .month-select:hover{background:rgba(255,255,255,.06)}
+    .month-select:active{transform:scale(.98)}
+    .highlight{background:rgba(10,132,255,.20)!important;animation:pulse .6s ease-out}
+    @keyframes pulse{0%,100%{background:rgba(10,132,255,.20)} 50%{background:rgba(10,132,255,.35)}}
+    .no-results{padding:40px 20px;text-align:center;color:var(--muted);font-size:clamp(12px,3.5vw,14px)}
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+    @keyframes shimmer{0%{background-position:200% 0} 100%{background-position:-200% 0}}
+    .skeleton-row{height:52px}
+    tbody tr{transition:all .2s ease;opacity:0;animation:fadeIn .3s ease forwards}
+    @keyframes fadeIn{to{opacity:1}}
+    tbody tr:nth-child(1){animation-delay:.05s}
+    tbody tr:nth-child(2){animation-delay:.1s}
+    tbody tr:nth-child(3){animation-delay:.15s}
+    tbody tr:nth-child(4){animation-delay:.2s}
+    tbody tr:nth-child(5){animation-delay:.25s}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:16px}
+    .stat-card{padding:14px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);text-align:center}
+    .stat-value{font-size:clamp(18px,5vw,22px);font-weight:900;color:var(--accent)}
+    .stat-label{font-size:clamp(9px,2.5vw,11px);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;line-height:1.2}
+    .badge{transition:transform .2s ease}
+    tbody tr:hover .badge{transform:scale(1.15)}
+    
+    @media (min-width: 640px){
+      .wrap{padding:28px 20px}
+      .header{margin-bottom:24px}
+      .controls{margin-bottom:20px}
+      .stats-row{margin-bottom:20px}
+    }
+    
+    @media (min-width: 960px){
+      .wrap{padding:32px 24px}
+      .grid{grid-template-columns:1.4fr 1fr}
+      .header{margin-bottom:28px}
+      tbody td{padding:14px 16px}
+      thead th{padding:14px 16px}
+      .card{border-radius:18px}
+      .side .box{border-radius:18px}
+    }
+    
+    @media (hover: none) and (pointer: coarse){
+      .search-box,.month-select{padding:14px 14px 14px 40px;font-size:16px}
+      tbody td{padding:16px 12px}
+      .badge{min-width:36px;height:36px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <div class="title">CWL Bonus – Rangliste</div>
+        <div class="subtitle">Accounts werden einzeln gewertet • +5 Bonus nur bei exakt 7 Angriffen</div>
+      </div>
+      <span class="pill"><span class="dot"></span> <span id="status">Lädt...</span></span>
+    </div>
+
+    <div class="controls">
+      <input type="text" class="search-box" id="searchBox" placeholder="Spielername suchen..." />
+      <select class="month-select" id="monthSelect">
+        <option value="2026-01">Januar 2026</option>
+      </select>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="totalPlayers">—</div>
+        <div class="stat-label">Spieler</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="avgPoints">—</div>
+        <div class="stat-label">Ø Punkte</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="bonusCount">—</div>
+        <div class="stat-label">7/7 Angriffe</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank">Rang</th>
+              <th>Spieler</th>
+              <th style="width:140px;">Punkte</th>
+              <th style="width:120px;">Angriffe</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+        </div>
+        <div class="note">Punkte: Sterne (0/5/10/20) + 0.1×% + RH-Diff (up: +3/RH, down: −2/RH) • Bonus: +5 bei 7/7 Angriffen</div>
+      </div>
+
+      <div class="side">
+        <div class="box">
+          <h3>Top 1</h3>
+          <div class="big" id="top1Name">—</div>
+          <div class="small" id="top1Stats">—</div>
+        </div>
+        <div class="box">
+          <h3>Top 3</h3>
+          <div class="small" id="top3Line1">—</div>
+          <div class="small" id="top3Line2">—</div>
+          <div class="small" id="top3Line3">—</div>
+        </div>
+        <div class="box">
+          <h3>Hinweis</h3>
+          <div class="small">Zweitaccounts werden NICHT zusammengelegt. Jeder Account zählt einzeln.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allData = [];
+    let currentData = [];
+
+    async function loadMonth(month) {
+      document.getElementById('tableBody').innerHTML = '<tr class="skeleton"><td colspan="4"><div class="skeleton-row"></div></td></tr>'.repeat(5);
+      
+      try {
+        const response = await fetch(`data/${month}.json`);
+        if (!response.ok) throw new Error('Monat nicht gefunden');
+        const data = await response.json();
+        allData = data.players;
+        currentData = [...allData];
+        document.getElementById('status').textContent = data.month;
+        renderTable();
+        updateSidebar();
+        updateStats();
+      } catch (error) {
+        document.getElementById('status').textContent = 'Fehler beim Laden';
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="no-results">❌ Fehler beim Laden der Daten</td></tr>';
+        console.error(error);
+      }
+    }
+
+    function renderTable(searchTerm = '') {
+      const tbody = document.getElementById('tableBody');
+      const filtered = searchTerm 
+        ? currentData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : currentData;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden 🔍</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((p, idx) => {
+        const badge = p.rank <= 3 
+          ? `<span class="badge b${p.rank}">${p.rank}</span>`
+          : p.rank;
+        const attacks = p.bonus ? `${p.attacks} ✅` : p.attacks;
+        const highlightClass = searchTerm && p.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+          ? 'highlight' 
+          : '';
+        
+        return `<tr class="${highlightClass}" style="animation-delay:${idx * 0.03}s">
+          <td class="rank">${badge}</td>
+          <td class="name">${p.name}</td>
+          <td class="points">${p.points}</td>
+          <td class="attacks">${attacks}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function updateSidebar() {
+      if (currentData.length === 0) return;
+
+      const top1 = currentData[0];
+      document.getElementById('top1Name').textContent = top1.name;
+      document.getElementById('top1Stats').textContent = `${top1.points} Punkte • ${top1.attacks}/7`;
+
+      const top3 = currentData.slice(0, 3);
+      document.getElementById('top3Line1').textContent = top3[0] ? `1) ${top3[0].name} — ${top3[0].points}` : '—';
+      document.getElementById('top3Line2').textContent = top3[1] ? `2) ${top3[1].name} — ${top3[1].points}` : '—';
+      document.getElementById('top3Line3').textContent = top3[2] ? `3) ${top3[2].name} — ${top3[2].points}` : '—';
+    }
+
+    function updateStats() {
+      const total = currentData.length;
+      const avgPoints = total ? Math.round(currentData.reduce((sum, p) => sum + p.points, 0) / total) : 0;
+      const bonusCount = currentData.filter(p => p.bonus).length;
+      
+      document.getElementById('totalPlayers').textContent = total;
+      document.getElementById('avgPoints').textContent = avgPoints;
+      document.getElementById('bonusCount').textContent = `${bonusCount}/${total}`;
+    }
+
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      renderTable(e.target.value.trim());
+    });
+
+    document.getElementById('monthSelect').addEventListener('change', (e) => {
+      loadMonth(e.target.value);
+    });
+
+    // Initial load
+    loadMonth('2026-01');
+  </script>
+</body>
+</html>
