@@ -225,10 +225,10 @@
       document.getElementById('top3Line3').textContent = top3[2] ? `3) ${top3[2].name} — ${top3[2].points}` : '—';
     }
 
-    function updateStats() {
-      const total = currentData.length;
-      const avgPoints = total ? Math.round(currentData.reduce((sum, p) => sum + p.points, 0) / total) : 0;
-      const bonusCount = currentData.filter(p => p.bonus).length;
+    function updateStats(data = allData) {
+      const total = data.length;
+      const avgPoints = total ? Math.round(data.reduce((sum, p) => sum + p.points, 0) / total) : 0;
+      const bonusCount = data.filter(p => p.bonus).length;
       
       document.getElementById('totalPlayers').textContent = total;
       document.getElementById('avgPoints').textContent = avgPoints;
@@ -236,7 +236,12 @@
     }
 
     document.getElementById('searchBox').addEventListener('input', (e) => {
-      renderTable(e.target.value.trim());
+      const searchTerm = e.target.value.trim();
+      renderTable(searchTerm);
+      const filtered = searchTerm 
+        ? allData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : allData;
+      updateStats(filtered);
     });
 
     document.getElementById('monthSelect').addEventListener('change', (e) => {
