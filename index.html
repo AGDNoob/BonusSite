@@ -186,8 +186,8 @@
     function renderTable(searchTerm = '') {
       const tbody = document.getElementById('tableBody');
       const filtered = searchTerm 
-        ? currentData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        : currentData;
+        ? allData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : allData;
 
       if (filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden 🔍</td></tr>';
@@ -203,7 +203,7 @@
           ? 'highlight' 
           : '';
         
-        return `<tr class="${highlightClass}" style="animation-delay:${idx * 0.03}s">
+        return `<tr class="${highlightClass}" style="animation-delay:${Math.min(idx * 0.03, 0.5)}s">
           <td class="rank">${badge}</td>
           <td class="name">${p.name}</td>
           <td class="points">${p.points}</td>
