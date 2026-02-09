@@ -41,9 +41,16 @@
     .search-box,.month-select{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:clamp(13px,3.5vw,14px);outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
     .search-box{flex:1;min-width:200px;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Cpath d='M11.7 10.3l3.6 3.6-1.4 1.4-3.6-3.6A6 6 0 1112 6a6 6 0 01-.3 4.3zM6 10a4 4 0 100-8 4 4 0 000 8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
     .search-box:focus{border-color:var(--accent);background-color:rgba(10,132,255,.08);box-shadow:0 0 0 3px rgba(10,132,255,.12)}
-    .month-select{min-width:160px;cursor:pointer;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Crect x='3' y='4' width='10' height='10' rx='1' stroke='%23a9b4cc' fill='none'/%3E%3Cpath d='M5 2v3M11 2v3M3 7h10'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
-    .month-select:hover{background:rgba(255,255,255,.06)}
-    .month-select:active{transform:scale(.98)}
+    .month-dropdown{position:relative;min-width:180px}
+    .month-btn{width:100%;padding:12px 14px;padding-left:40px;padding-right:36px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:clamp(13px,3.5vw,14px);cursor:pointer;text-align:left;transition:all .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Crect x='3' y='4' width='10' height='10' rx='1' stroke='%23a9b4cc' fill='none'/%3E%3Cpath d='M5 2v3M11 2v3M3 7h10'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
+    .month-btn::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-top-color:var(--muted);transition:transform .2s}
+    .month-dropdown.open .month-btn::after{transform:translateY(-50%) rotate(180deg)}
+    .month-btn:hover{background-color:rgba(255,255,255,.06)}
+    .month-list{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+    .month-dropdown.open .month-list{opacity:1;visibility:visible;transform:translateY(0)}
+    .month-option{padding:12px 16px;cursor:pointer;transition:background .15s;color:var(--text);font-size:14px}
+    .month-option:hover{background:rgba(255,255,255,.06)}
+    .month-option.active{background:rgba(10,132,255,.15);color:var(--accent)}
     .highlight{background:rgba(10,132,255,.20)!important;animation:pulse .6s ease-out}
     @keyframes pulse{0%,100%{background:rgba(10,132,255,.20)} 50%{background:rgba(10,132,255,.35)}}
     .no-results{padding:40px 20px;text-align:center;color:var(--muted);font-size:clamp(12px,3.5vw,14px)}
@@ -61,6 +68,34 @@
     tbody tr:hover .badge{transform:scale(1.15)}
     .credits{text-align:center;padding:32px 16px;color:var(--muted);font-size:clamp(12px,3vw,14px);margin-top:24px}
     .credits strong{color:var(--text);font-weight:600}
+    
+    /* Icons */
+    .icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;vertical-align:middle}
+    .icon-check{color:#34c759}
+    .icon-search{color:var(--muted)}
+    .icon-error{color:#ff453a}
+    .icon svg{width:100%;height:100%;fill:currentColor}
+    
+    /* Enhanced Animations */
+    .wrap{animation:fadeSlideIn .5s ease}
+    @keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)}}
+    .card{transition:transform .2s ease,box-shadow .2s ease}
+    .card:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+    .side .box{transition:transform .2s ease,border-color .2s ease}
+    .side .box:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.18)}
+    .stat-card{transition:transform .2s ease,border-color .2s ease}
+    .stat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+    .stat-value{transition:color .2s ease}
+    .stat-card:hover .stat-value{color:#fff}
+    tbody tr{opacity:0;animation:rowFadeIn .3s ease forwards}
+    @keyframes rowFadeIn{to{opacity:1}}
+    .pill{transition:background .2s ease,border-color .2s ease}
+    .pill:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18)}
+    .dot{animation:pulse-dot 2s ease-in-out infinite}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)}}
+    .title{background:linear-gradient(135deg,var(--text) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .search-box{transition:all .25s cubic-bezier(.4,0,.2,1)}
+    .search-box:focus{transform:scale(1.01)}
     
     @media (min-width: 640px){
       .wrap{padding:28px 20px}
@@ -98,9 +133,13 @@
 
     <div class="controls">
       <input type="text" class="search-box" id="searchBox" placeholder="Spielername suchen..." />
-      <select class="month-select" id="monthSelect">
-        <option value="2026-01">Januar 2026</option>
-      </select>
+      <div class="month-dropdown" id="monthDropdown">
+        <button class="month-btn" id="monthBtn">Februar 2026</button>
+        <div class="month-list" id="monthList">
+          <div class="month-option active" data-value="2026-02">Februar 2026</div>
+          <div class="month-option" data-value="2026-01">Januar 2026</div>
+        </div>
+      </div>
     </div>
 
     <div class="stats-row">
@@ -180,7 +219,7 @@
         updateStats();
       } catch (error) {
         document.getElementById('status').textContent = 'Fehler beim Laden';
-        document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="no-results">❌ Fehler beim Laden der Daten</td></tr>';
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="no-results"><span class="icon icon-error"><svg viewBox="0 0 20 20"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg></span> Fehler beim Laden der Daten</td></tr>';
         console.error(error);
       }
     }
@@ -196,7 +235,7 @@
       console.log('Sample data:', filtered[0]);
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden 🔍</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden <span class="icon icon-search"><svg viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg></span></td></tr>';
         return;
       }
 
@@ -204,12 +243,13 @@
         const badge = p.rank <= 3 
           ? `<span class="badge b${p.rank}">${p.rank}</span>`
           : p.rank;
-        const attacks = p.bonus ? `${p.attacks} ✅` : p.attacks;
+        const checkIcon = '<span class="icon icon-check"><svg viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg></span>';
+        const attacks = p.bonus ? `${p.attacks} ${checkIcon}` : p.attacks;
         const highlightClass = searchTerm && p.name.toLowerCase().includes(searchTerm.toLowerCase()) 
           ? 'highlight' 
           : '';
         
-        return `<tr class="${highlightClass}">
+        return `<tr class="${highlightClass}" style="animation-delay:${idx * 0.03}s">
           <td class="rank">${badge}</td>
           <td class="name">${p.name}</td>
           <td class="points">${p.points}</td>
@@ -253,12 +293,34 @@
       updateStats(filtered);
     });
 
-    document.getElementById('monthSelect').addEventListener('change', (e) => {
-      loadMonth(e.target.value);
+    // Custom Dropdown
+    const dropdown = document.getElementById('monthDropdown');
+    const monthBtn = document.getElementById('monthBtn');
+    const monthList = document.getElementById('monthList');
+
+    monthBtn.addEventListener('click', () => {
+      dropdown.classList.toggle('open');
+    });
+
+    monthList.addEventListener('click', (e) => {
+      const option = e.target.closest('.month-option');
+      if (!option) return;
+      
+      monthList.querySelectorAll('.month-option').forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
+      monthBtn.textContent = option.textContent;
+      dropdown.classList.remove('open');
+      loadMonth(option.dataset.value);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
     });
 
     // Initial load
-    loadMonth('2026-01');
+    loadMonth('2026-02');
   </script>
 </body>
 </html>
