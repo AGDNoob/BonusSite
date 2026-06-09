@@ -1,0 +1,24 @@
+# ── Secrets ──────────────────────────────────────────────
+# Das Fetch-Script enthält den Supercell/CoC-API-Key → bleibt lokal!
+fetch_cwl_feb2026.py
+api_key.txt
+.env
+.env.*
+*.key
+*.local
+secrets.*
+
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ── Editor / OS ──────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Lokale Test-/Scratch-Dateien ─────────────────────────
+test.html

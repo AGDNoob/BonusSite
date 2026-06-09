@@ -1,328 +1,716 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CWL Bonus – Rangliste</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080b12" id="themeColorMeta" />
+  <title>CWL Rangliste</title>
   <style>
+    /* ===========================================================
+       Tokens & Themes
+    =========================================================== */
     :root{
-      --bg:#0b0f17; --card:#101826; --text:#eaf0ff; --muted:#a9b4cc;
-      --line:rgba(255,255,255,.10); --accent:#0a84ff; --gold:#f5c542; --silver:#c7d2e3; --bronze:#d08c5a;
+      --radius:16px; --radius-sm:12px; --radius-lg:22px; --maxw:1080px;
+      --gold:#f5c542; --silver:#cdd8ec; --bronze:#e0975a;
+      --up:#2fd16a; --down:#ff5a52; --new:#4f8cff;
+      --ease:cubic-bezier(.4,0,.2,1);
     }
+    html[data-theme="dark"]{
+      --bg:#080b12; --grad1:#16203f; --grad2:#0a0e18;
+      --panel:#0f1726; --panel-2:#131c2e;
+      --card:rgba(255,255,255,.035); --card-hover:rgba(255,255,255,.07);
+      --text:#e9eefc; --muted:#909dba; --muted-2:#6b7794;
+      --line:rgba(255,255,255,.09); --line-strong:rgba(255,255,255,.17);
+      --accent:#4f8cff; --accent-ink:#fff; --accent-weak:rgba(79,140,255,.15);
+      --shadow:0 18px 50px rgba(0,0,0,.45);
+      --badge-n:rgba(255,255,255,.05);
+    }
+    html[data-theme="light"]{
+      --bg:#e9edf6; --grad1:#d6e2ff; --grad2:#eef1f8;
+      --panel:#ffffff; --panel-2:#f5f8fd;
+      --card:rgba(16,28,54,.025); --card-hover:rgba(16,28,54,.055);
+      --text:#0d1526; --muted:#5b6886; --muted-2:#7c89a6;
+      --line:rgba(13,21,38,.10); --line-strong:rgba(13,21,38,.20);
+      --accent:#2563eb; --accent-ink:#fff; --accent-weak:rgba(37,99,235,.12);
+      --shadow:0 16px 40px rgba(31,45,80,.16);
+      --badge-n:rgba(16,28,54,.05);
+    }
+
+    /* ===========================================================
+       Base
+    =========================================================== */
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:radial-gradient(1200px 700px at 10% 10%, #142044 0%, var(--bg) 55%);color:var(--text);min-height:100vh}
-    .wrap{max-width:1200px;margin:0 auto;padding:20px 16px}
-    .header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
-    .title{font-size:clamp(20px,5vw,26px);font-weight:800;letter-spacing:.2px;line-height:1.2}
-    .subtitle{color:var(--muted);font-size:clamp(11px,3vw,13px);margin-top:6px;line-height:1.4}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.3)}
-    .table-container{overflow-x:auto;-webkit-overflow-scrolling:touch}
-    table{width:100%;border-collapse:separate;border-spacing:0;min-width:500px}
-    thead th{font-size:clamp(10px,2.5vw,12px);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:left;padding:14px 12px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);white-space:nowrap}
-    tbody td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:clamp(13px,3.5vw,15px)}
-    tbody tr:last-child td{border-bottom:none}
-    tbody tr:hover{background:rgba(255,255,255,.03)}
-    .rank{width:70px;font-weight:800}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:clamp(10px,2.5vw,12px);color:var(--muted);white-space:nowrap}
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-    .points{font-variant-numeric:tabular-nums;font-weight:800}
-    .attacks{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
-    .badge{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:10px;font-weight:900;color:#0b0f17;font-size:clamp(13px,3.5vw,15px)}
-    .b1{background:var(--gold)} .b2{background:var(--silver)} .b3{background:var(--bronze)}
-    .name{font-weight:750;word-break:break-word}
-    .note{padding:14px 12px;color:var(--muted);font-size:clamp(10px,2.5vw,12px);border-top:1px solid var(--line);line-height:1.5}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    .side{display:flex;flex-direction:column;gap:12px}
-    .side .box{padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
-    .side h3{margin:0 0 10px;font-size:clamp(11px,3vw,13px);color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
-    .side .big{font-size:clamp(20px,5vw,24px);font-weight:900;word-break:break-word}
-    .side .small{color:var(--muted);font-size:clamp(11px,3vw,12px);line-height:1.6}
-    .controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-    .search-box,.month-select{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:clamp(13px,3.5vw,14px);outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
-    .search-box{flex:1;min-width:200px;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Cpath d='M11.7 10.3l3.6 3.6-1.4 1.4-3.6-3.6A6 6 0 1112 6a6 6 0 01-.3 4.3zM6 10a4 4 0 100-8 4 4 0 000 8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
-    .search-box:focus{border-color:var(--accent);background-color:rgba(10,132,255,.08);box-shadow:0 0 0 3px rgba(10,132,255,.12)}
-    .month-dropdown{position:relative;min-width:180px}
-    .month-btn{width:100%;padding:12px 14px;padding-left:40px;padding-right:36px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:clamp(13px,3.5vw,14px);cursor:pointer;text-align:left;transition:all .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23a9b4cc'%3E%3Crect x='3' y='4' width='10' height='10' rx='1' stroke='%23a9b4cc' fill='none'/%3E%3Cpath d='M5 2v3M11 2v3M3 7h10'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;background-size:16px}
-    .month-btn::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-top-color:var(--muted);transition:transform .2s}
-    .month-dropdown.open .month-btn::after{transform:translateY(-50%) rotate(180deg)}
-    .month-btn:hover{background-color:rgba(255,255,255,.06)}
-    .month-list{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-    .month-dropdown.open .month-list{opacity:1;visibility:visible;transform:translateY(0)}
-    .month-option{padding:12px 16px;cursor:pointer;transition:background .15s;color:var(--text);font-size:14px}
-    .month-option:hover{background:rgba(255,255,255,.06)}
-    .month-option.active{background:rgba(10,132,255,.15);color:var(--accent)}
-    .highlight{background:rgba(10,132,255,.20)!important;animation:pulse .6s ease-out}
-    @keyframes pulse{0%,100%{background:rgba(10,132,255,.20)} 50%{background:rgba(10,132,255,.35)}}
-    .no-results{padding:40px 20px;text-align:center;color:var(--muted);font-size:clamp(12px,3.5vw,14px)}
-    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
-    @keyframes shimmer{0%{background-position:200% 0} 100%{background-position:-200% 0}}
-    .skeleton-row{height:52px}
-    tbody tr{transition:all .2s ease}
-    .fade-in{opacity:0;animation:fadeIn .3s ease forwards}
-    @keyframes fadeIn{to{opacity:1}}
-    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:16px}
-    .stat-card{padding:14px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);text-align:center}
-    .stat-value{font-size:clamp(18px,5vw,22px);font-weight:900;color:var(--accent)}
-    .stat-label{font-size:clamp(9px,2.5vw,11px);color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;line-height:1.2}
-    .badge{transition:transform .2s ease}
-    tbody tr:hover .badge{transform:scale(1.15)}
-    .credits{text-align:center;padding:32px 16px;color:var(--muted);font-size:clamp(12px,3vw,14px);margin-top:24px}
-    .credits strong{color:var(--text);font-weight:600}
-    
-    /* Icons */
-    .icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;vertical-align:middle}
-    .icon-check{color:#34c759}
-    .icon-search{color:var(--muted)}
-    .icon-error{color:#ff453a}
-    .icon svg{width:100%;height:100%;fill:currentColor}
-    
-    /* Enhanced Animations */
-    .wrap{animation:fadeSlideIn .5s ease}
-    @keyframes fadeSlideIn{from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)}}
-    .card{transition:transform .2s ease,box-shadow .2s ease}
-    .card:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-    .side .box{transition:transform .2s ease,border-color .2s ease}
-    .side .box:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.18)}
-    .stat-card{transition:transform .2s ease,border-color .2s ease}
-    .stat-card:hover{transform:translateY(-3px);border-color:var(--accent)}
-    .stat-value{transition:color .2s ease}
-    .stat-card:hover .stat-value{color:#fff}
-    tbody tr{opacity:0;animation:rowFadeIn .3s ease forwards}
-    @keyframes rowFadeIn{to{opacity:1}}
-    .pill{transition:background .2s ease,border-color .2s ease}
-    .pill:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18)}
-    .dot{animation:pulse-dot 2s ease-in-out infinite}
-    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)}}
-    .title{background:linear-gradient(135deg,var(--text) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .search-box{transition:all .25s cubic-bezier(.4,0,.2,1)}
-    .search-box:focus{transform:scale(1.01)}
-    
-    @media (min-width: 640px){
-      .wrap{padding:28px 20px}
-      .header{margin-bottom:24px}
-      .controls{margin-bottom:20px}
-      .stats-row{margin-bottom:20px}
+    html,body{margin:0}
+    body{
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif;
+      color:var(--text); background:var(--bg);
+      background-image:radial-gradient(1200px 720px at 12% -8%, var(--grad1) 0%, transparent 55%),
+                       radial-gradient(900px 600px at 110% 0%, var(--accent-weak) 0%, transparent 50%);
+      background-attachment:fixed;
+      min-height:100vh; line-height:1.5;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
-    
-    @media (min-width: 960px){
-      .wrap{padding:32px 24px}
-      .grid{grid-template-columns:1.4fr 1fr}
-      .header{margin-bottom:28px}
-      tbody td{padding:14px 16px}
-      thead th{padding:14px 16px}
-      .card{border-radius:18px}
-      .side .box{border-radius:18px}
+    .app{max-width:var(--maxw); margin:0 auto; padding:18px 14px 40px; animation:appIn .5s var(--ease)}
+    @keyframes appIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    a{color:var(--accent)}
+    button{font-family:inherit}
+
+    /* ===========================================================
+       Topbar
+    =========================================================== */
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+    .brand{display:flex; align-items:center; gap:12px; min-width:0}
+    .logo{width:46px;height:46px;border-radius:13px;flex:none;display:grid;place-items:center;
+      background:linear-gradient(150deg,var(--accent),#7db0ff); color:#fff; box-shadow:0 8px 22px var(--accent-weak)}
+    .logo svg{width:26px;height:26px}
+    .brand h1{margin:0; font-size:clamp(18px,4.6vw,24px); font-weight:800; letter-spacing:.2px; line-height:1.15}
+    .brand .subtitle{margin:2px 0 0; color:var(--muted); font-size:clamp(11px,3vw,13px)}
+    .brand .subtitle b{color:var(--text); font-weight:600}
+    .topbar-actions{display:flex; gap:8px; flex:none}
+    .icon-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+      color:var(--text); display:grid; place-items:center; cursor:pointer; transition:.2s var(--ease)}
+    .icon-btn:hover{background:var(--card-hover); border-color:var(--line-strong); transform:translateY(-1px)}
+    .icon-btn svg{width:20px;height:20px}
+    .icon-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+    /* ===========================================================
+       Month selector
+    =========================================================== */
+    .months{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 8px; margin-bottom:14px;
+      scrollbar-width:none; -webkit-overflow-scrolling:touch}
+    .months::-webkit-scrollbar{display:none}
+    .month-pill{flex:none; padding:9px 15px; border-radius:999px; border:1px solid var(--line);
+      background:var(--card); color:var(--muted); font-size:14px; font-weight:600; cursor:pointer;
+      white-space:nowrap; transition:.18s var(--ease)}
+    .month-pill:hover{background:var(--card-hover); color:var(--text)}
+    .month-pill.active{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); box-shadow:0 6px 18px var(--accent-weak)}
+    .month-pill:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+    /* ===========================================================
+       Stats
+    =========================================================== */
+    .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px}
+    .stat{background:var(--card); border:1px solid var(--line); border-radius:var(--radius-sm);
+      padding:13px 10px; text-align:center; transition:.2s var(--ease)}
+    .stat:hover{transform:translateY(-2px); border-color:var(--line-strong)}
+    .stat .v{font-size:clamp(17px,4.6vw,22px); font-weight:900; color:var(--text); font-variant-numeric:tabular-nums; line-height:1.1}
+    .stat .v small{font-size:.6em; color:var(--muted); font-weight:700}
+    .stat .l{font-size:clamp(9px,2.4vw,11px); color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-top:6px}
+    @media(max-width:520px){ .stats{grid-template-columns:repeat(2,1fr)} }
+
+    /* ===========================================================
+       Controls
+    =========================================================== */
+    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px}
+    .search{position:relative; flex:1 1 240px; min-width:0}
+    .search svg.s-ico{position:absolute; left:13px; top:50%; transform:translateY(-50%); width:17px;height:17px; color:var(--muted); pointer-events:none}
+    .search input{width:100%; padding:13px 40px 13px 40px; border-radius:var(--radius-sm);
+      border:1px solid var(--line); background:var(--panel); color:var(--text); font-size:16px; outline:none; transition:.2s var(--ease)}
+    .search input::placeholder{color:var(--muted-2)}
+    .search input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-weak)}
+    .search .clear{position:absolute; right:8px; top:50%; transform:translateY(-50%); width:28px;height:28px;
+      border:0; background:var(--card); border-radius:8px; color:var(--muted); cursor:pointer; display:none; place-items:center}
+    .search .clear.show{display:grid}
+    .search .clear:hover{color:var(--text); background:var(--card-hover)}
+    .chips{display:flex; gap:8px; flex:none}
+    .chip{padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--card);
+      color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; transition:.18s var(--ease); white-space:nowrap}
+    .chip:hover{background:var(--card-hover); color:var(--text)}
+    .chip.active{background:var(--accent-weak); border-color:var(--accent); color:var(--text)}
+    .chip:focus-visible,.search input:focus-visible{outline:none}
+
+    /* ===========================================================
+       Podium
+    =========================================================== */
+    .podium{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px}
+    .pod{position:relative; border:1px solid var(--line); border-radius:var(--radius); padding:16px 14px;
+      background:linear-gradient(180deg,var(--card-hover),var(--card)); overflow:hidden; cursor:pointer;
+      transition:.2s var(--ease)}
+    .pod:hover{transform:translateY(-3px); border-color:var(--line-strong); box-shadow:var(--shadow)}
+    .pod:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+    .pod::before{content:""; position:absolute; inset:0 0 auto 0; height:4px}
+    .pod.p1{grid-column:1 / -1}
+    .pod.p1::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .pod.p2::before{background:linear-gradient(90deg,transparent,var(--silver),transparent)}
+    .pod.p3::before{background:linear-gradient(90deg,transparent,var(--bronze),transparent)}
+    .pod .medal{font-size:24px; line-height:1}
+    .pod .prank{display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.06em}
+    .pod .pname{font-weight:800; margin:8px 0 2px; overflow-wrap:break-word; line-height:1.2}
+    .pod.p1 .pname{font-size:clamp(20px,5.2vw,28px)}
+    .pod.p2 .pname,.pod.p3 .pname{font-size:clamp(15px,4vw,18px)}
+    .pod .ppts{font-weight:900; font-variant-numeric:tabular-nums; color:var(--text)}
+    .pod.p1 .ppts{font-size:clamp(22px,6vw,30px)}
+    .pod.p2 .ppts,.pod.p3 .ppts{font-size:clamp(18px,5vw,22px)}
+    .pod .pmeta{color:var(--muted); font-size:12px; margin-top:4px; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .pod.p1{box-shadow:0 14px 40px rgba(245,197,66,.10)}
+    .pod .crown{position:absolute; right:14px; top:14px; font-size:26px; opacity:.9}
+    @media(min-width:720px){
+      .podium{grid-template-columns:1fr 1.18fr 1fr; align-items:end; gap:14px}
+      .pod.p1{grid-column:auto; order:2; transform:translateY(-10px)}
+      .pod.p1:hover{transform:translateY(-13px)}
+      .pod.p2{order:1}
+      .pod.p3{order:3}
     }
-    
-    @media (hover: none) and (pointer: coarse){
-      .search-box,.month-select{padding:14px 14px 14px 40px;font-size:16px}
-      tbody td{padding:16px 12px}
-      .badge{min-width:36px;height:36px}
+
+    /* ===========================================================
+       Leaderboard
+    =========================================================== */
+    .board{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+      overflow:hidden; box-shadow:var(--shadow)}
+    .results-info{padding:10px 16px 0; color:var(--muted); font-size:12px}
+    .row{display:grid; grid-template-columns:48px minmax(0,1fr) 66px 78px; gap:10px; align-items:center; padding:12px 14px}
+    .row.head{position:sticky; top:0; z-index:5; background:var(--panel-2); border-bottom:1px solid var(--line)}
+    .row.head .th{background:none; border:0; padding:0; margin:0; color:var(--muted); font:inherit;
+      font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; cursor:pointer;
+      display:inline-flex; align-items:center; gap:4px; transition:color .15s}
+    .row.head .th:hover{color:var(--text)}
+    .row.head .th.active{color:var(--accent)}
+    .row.head .th.col-pts,.row.head .th.col-att{justify-content:flex-end}
+    .th .caret{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent}
+    .th.active.asc .caret{border-bottom:5px solid currentColor}
+    .th.active.desc .caret{border-top:5px solid currentColor}
+
+    .plist .row{border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s}
+    .plist .row:last-child{border-bottom:0}
+    .plist .row:hover{background:var(--card)}
+    .plist .row:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+    .plist .row.hl{background:var(--accent-weak)}
+    .badge{display:inline-flex; align-items:center; justify-content:center; min-width:32px; height:32px;
+      border-radius:9px; font-weight:800; font-size:14px; font-variant-numeric:tabular-nums}
+    .badge.n{background:var(--badge-n); color:var(--muted); border:1px solid var(--line)}
+    .badge.g1{background:linear-gradient(160deg,#ffe07a,var(--gold)); color:#3a2a00}
+    .badge.g2{background:linear-gradient(160deg,#eaf0fb,var(--silver)); color:#23304a}
+    .badge.g3{background:linear-gradient(160deg,#f0b483,var(--bronze)); color:#3a1c00}
+    .name-cell{min-width:0}
+    .name-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+    .pname{font-weight:650; overflow-wrap:break-word; min-width:0}
+    .move{display:inline-flex; align-items:center; gap:2px; font-size:11px; font-weight:800; font-variant-numeric:tabular-nums;
+      padding:2px 6px; border-radius:999px; line-height:1.4}
+    .move.up{color:var(--up); background:color-mix(in srgb,var(--up) 16%,transparent)}
+    .move.down{color:var(--down); background:color-mix(in srgb,var(--down) 16%,transparent)}
+    .move.same{color:var(--muted-2); background:var(--badge-n)}
+    .move.new{color:var(--new); background:color-mix(in srgb,var(--new) 18%,transparent)}
+    .pts{text-align:right; font-weight:900; font-variant-numeric:tabular-nums; font-size:15px}
+    .att{text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; font-size:13px; white-space:nowrap;
+      display:inline-flex; gap:5px; align-items:center; justify-content:flex-end}
+    .att.full{color:var(--up); font-weight:700}
+    .att .chk{width:15px;height:15px}
+
+    .empty{padding:48px 20px; text-align:center; color:var(--muted)}
+    .empty svg{width:34px;height:34px; opacity:.5; margin-bottom:8px}
+    .note{padding:14px 16px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); line-height:1.6}
+    .note button{background:none;border:0;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline}
+
+    /* Skeleton */
+    .sk{height:57px; border-bottom:1px solid var(--line);
+      background:linear-gradient(90deg,var(--card) 25%,var(--card-hover) 50%,var(--card) 75%);
+      background-size:200% 100%; animation:sk 1.3s infinite}
+    @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ===========================================================
+       Modal
+    =========================================================== */
+    .backdrop{position:fixed; inset:0; background:rgba(4,7,14,.62); backdrop-filter:blur(4px);
+      display:flex; align-items:flex-end; justify-content:center; padding:0; z-index:50; opacity:0; animation:fade .2s forwards}
+    @media(min-width:640px){ .backdrop{align-items:center; padding:20px} }
+    @keyframes fade{to{opacity:1}}
+    .modal{background:var(--panel); border:1px solid var(--line-strong); width:100%; max-width:480px;
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0; box-shadow:var(--shadow); max-height:90vh; overflow:auto;
+      animation:sheet .28s var(--ease); padding-bottom:env(safe-area-inset-bottom)}
+    @media(min-width:640px){ .modal{border-radius:var(--radius-lg)} }
+    @keyframes sheet{from{transform:translateY(24px); opacity:.4}to{transform:none; opacity:1}}
+    .modal-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:20px 20px 12px;
+      position:sticky; top:0; background:var(--panel)}
+    .modal-head h2{margin:0; font-size:20px; font-weight:800; word-break:break-word}
+    .modal-head .sub{color:var(--muted); font-size:13px; margin-top:3px}
+    .modal-body{padding:4px 20px 22px}
+    .m-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:6px 0 18px}
+    .m-stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 8px; text-align:center}
+    .m-stat .v{font-weight:900; font-size:17px; font-variant-numeric:tabular-nums}
+    .m-stat .l{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px}
+    .chart{display:flex; align-items:flex-end; gap:8px; height:130px; padding:8px 2px 0; margin-top:6px}
+    .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; min-width:0}
+    .bar-val{font-size:11px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--muted)}
+    .bar{width:100%; max-width:34px; border-radius:7px 7px 3px 3px; background:var(--accent-weak); transition:height .4s var(--ease); min-height:3px}
+    .bar.cur{background:linear-gradient(180deg,var(--accent),#7db0ff)}
+    .bar.empty{background:var(--badge-n)}
+    .bar-lab{font-size:11px; color:var(--muted-2); white-space:nowrap}
+    .bar-col.cur .bar-lab{color:var(--accent); font-weight:700}
+    .info-list{margin:0; padding:0; list-style:none}
+    .info-list li{padding:11px 0; border-bottom:1px solid var(--line); display:flex; gap:11px; align-items:flex-start; font-size:14px; color:var(--muted)}
+    .info-list li:last-child{border-bottom:0}
+    .info-list b{color:var(--text); font-weight:700}
+    .info-list .ic{flex:none; width:26px;height:26px;border-radius:8px; background:var(--accent-weak); color:var(--accent);
+      display:grid; place-items:center; font-weight:900; font-size:13px}
+
+    .credits{text-align:center; padding:30px 16px 8px; color:var(--muted); font-size:13px}
+    .credits strong{color:var(--text); font-weight:600}
+
+    /* Kompaktere Tabelle auf schmalen Handys: mehr Platz für Namen */
+    @media(max-width:440px){
+      .row{grid-template-columns:38px minmax(0,1fr) 50px 58px; gap:8px; padding:12px 11px}
+      .pname{font-size:14px}
+      .badge{min-width:30px; height:30px; font-size:13px; border-radius:8px}
+      .pts{font-size:14px}
+      .att{font-size:12px}
+      .row.head .th{font-size:10px}
+      .move{font-size:10px; padding:1px 5px}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *{animation-duration:.001s !important; transition-duration:.001s !important}
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div>
-        <div class="title">CWL Bonus – Rangliste</div>
-        <div class="subtitle">Accounts werden einzeln gewertet • +5 Bonus nur bei exakt 7 Angriffen</div>
+  <div class="app">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v3a5 5 0 0 1-3 4.58V13a4 4 0 0 1-3 3.87V19h3v2H8v-2h3v-2.13A4 4 0 0 1 8 13v-1.42A5 5 0 0 1 5 7V4Z" fill="currentColor"/><path d="M3 5h2v2a3 3 0 0 1-2-2.83V5Zm16 0h2v.17A3 3 0 0 1 19 7V5Z" fill="currentColor" opacity=".7"/></svg>
+        </div>
+        <div>
+          <h1>CWL Rangliste</h1>
+          <p class="subtitle">Clan War League • <b id="seasonLabel">…</b></p>
+        </div>
       </div>
-      <span class="pill"><span class="dot"></span> <span id="status">Lädt...</span></span>
-    </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="infoBtn" aria-label="Wertung erklären" title="Wie wird gewertet?">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.3" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="themeBtn" aria-label="Hell/Dunkel umschalten" title="Theme"></button>
+      </div>
+    </header>
 
+    <!-- Month selector -->
+    <nav class="months" id="months" aria-label="Saison wählen"></nav>
+
+    <!-- Stats -->
+    <section class="stats" id="stats" aria-label="Statistiken"></section>
+
+    <!-- Controls -->
     <div class="controls">
-      <input type="text" class="search-box" id="searchBox" placeholder="Spielername suchen..." />
-      <div class="month-dropdown" id="monthDropdown">
-        <button class="month-btn" id="monthBtn">Mai 2026</button>
-        <div class="month-list" id="monthList">
-          <div class="month-option active" data-value="2026-05">Mai 2026</div>
-          <div class="month-option" data-value="2026-04">April 2026</div>
-          <div class="month-option" data-value="2026-02">Februar 2026</div>
-          <div class="month-option" data-value="2026-01">Januar 2026</div>
-        </div>
+      <div class="search">
+        <svg class="s-ico" viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
+        <input id="search" type="text" placeholder="Spieler suchen…" autocomplete="off" aria-label="Spieler suchen" />
+        <button class="clear" id="clearSearch" aria-label="Suche löschen">✕</button>
+      </div>
+      <div class="chips" id="filters" role="group" aria-label="Filter">
+        <button class="chip active" data-filter="all">Alle</button>
+        <button class="chip" data-filter="bonus">7/7</button>
+        <button class="chip" data-filter="active">Aktiv</button>
       </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-value" id="totalPlayers">—</div>
-        <div class="stat-label">Spieler</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="avgPoints">—</div>
-        <div class="stat-label">Ø Punkte</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="bonusCount">—</div>
-        <div class="stat-label">7/7 Angriffe</div>
-      </div>
-    </div>
+    <!-- Podium -->
+    <section class="podium" id="podium" aria-label="Top 3"></section>
 
-    <div class="grid">
-      <div class="card">
-        <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th class="rank">Rang</th>
-              <th>Spieler</th>
-              <th style="width:140px;">Punkte</th>
-              <th style="width:120px;">Angriffe</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-          </tbody>
-        </table>
-        </div>
-        <div class="note">Punkte: Sterne (0/5/10/20) + 0.1×% + RH-Diff (up: +3/RH, down: −2/RH) • Bonus: +5 bei 7/7 Angriffen</div>
+    <!-- Leaderboard -->
+    <section class="board">
+      <div id="resultsInfo" class="results-info" hidden></div>
+      <div class="row head">
+        <button class="th col-rank active asc" data-sort="rank">#<span class="caret"></span></button>
+        <button class="th col-name" data-sort="name">Spieler<span class="caret"></span></button>
+        <button class="th col-pts" data-sort="points">Punkte<span class="caret"></span></button>
+        <button class="th col-att" data-sort="attacks">Angriffe<span class="caret"></span></button>
       </div>
+      <div class="plist" id="list"></div>
+      <div class="note">
+        Grundpunkte = Sterne (0/5/10/20) + 0,1 × Zerstörung %, gewichtet nach Rathaus: höher ×1,25/Stufe, niedriger ×0,85/Stufe • Bonus +5 bei 7/7 • Jeder Account zählt einzeln.
+        <button id="infoBtn2">Mehr&nbsp;dazu</button>
+      </div>
+    </section>
 
-      <div class="side">
-        <div class="box">
-          <h3>Top 1</h3>
-          <div class="big" id="top1Name">—</div>
-          <div class="small" id="top1Stats">—</div>
-        </div>
-        <div class="box">
-          <h3>Top 3</h3>
-          <div class="small" id="top3Line1">—</div>
-          <div class="small" id="top3Line2">—</div>
-          <div class="small" id="top3Line3">—</div>
-        </div>
-        <div class="box">
-          <h3>Hinweis</h3>
-          <div class="small">Zweitaccounts werden NICHT zusammengelegt. Jeder Account zählt einzeln.</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="credits">
-      Seite, Daten und Berechnungen von <strong>AGDNoob</strong> &lt;3
-    </div>
+    <footer class="credits">Seite, Daten &amp; Berechnungen von <strong>AGDNoob</strong> &lt;3</footer>
   </div>
 
   <script>
-    let allData = [];
-    let currentData = [];
+  (function(){
+    "use strict";
 
-    async function loadMonth(month) {
-      document.getElementById('tableBody').innerHTML = '<tr class="skeleton"><td colspan="4"><div class="skeleton-row"></div></td></tr>'.repeat(5);
-      
-      try {
-        const response = await fetch(`data/${month}.json`);
-        if (!response.ok) throw new Error('Monat nicht gefunden');
-        const data = await response.json();
-        allData = data.players;
-        currentData = [...allData];
-        document.getElementById('status').textContent = data.month;
-        renderTable();
-        updateSidebar();
-        updateStats();
-      } catch (error) {
-        document.getElementById('status').textContent = 'Fehler beim Laden';
-        document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="no-results"><span class="icon icon-error"><svg viewBox="0 0 20 20"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg></span> Fehler beim Laden der Daten</td></tr>';
-        console.error(error);
-      }
+    /* Verfügbare Saisons in chronologischer Reihenfolge.
+       Neuen Monat einfach hier ergänzen (z. B. '2026-07'). */
+    const SEASONS = ['2026-01','2026-02','2026-04','2026-05','2026-06'];
+    const MON_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+    const state = {
+      data:{},            // key -> {key,label,players[]}
+      chrono:[],          // geladene keys, chronologisch aufsteigend
+      nameIdx:new Map(),  // name -> Map(key -> record)
+      current:null,
+      search:'',
+      filter:'all',
+      sort:{key:'rank', dir:1}
+    };
+
+    const $ = s => document.querySelector(s);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const shortLabel = key => { const m = +key.split('-')[1]; return MON_SHORT[m-1] || key; };
+
+    /* ---------- Theme ---------- */
+    function setTheme(t){
+      document.documentElement.setAttribute('data-theme', t);
+      try{ localStorage.setItem('cwl-theme', t); }catch(e){}
+      $('#themeColorMeta').setAttribute('content', t==='dark' ? '#080b12' : '#e9edf6');
+      $('#themeBtn').innerHTML = t==='dark'
+        ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 1 0 9.8 9.8Z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>';
+    }
+    (function initTheme(){
+      let t = 'dark';
+      try{ t = localStorage.getItem('cwl-theme') || 'dark'; }catch(e){}
+      setTheme(t);
+    })();
+    $('#themeBtn').addEventListener('click', ()=>{
+      setTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+    });
+
+    /* ---------- Laden ---------- */
+    function skeleton(){
+      $('#list').innerHTML = Array(6).fill('<div class="sk"></div>').join('');
     }
 
-    function renderTable(searchTerm = '') {
-      const tbody = document.getElementById('tableBody');
-      const filtered = searchTerm 
-        ? allData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        : allData;
+    async function loadAll(){
+      skeleton();
+      const results = await Promise.all(SEASONS.map(async key=>{
+        try{
+          const r = await fetch('data/'+key+'.json', {cache:'no-store'});
+          if(!r.ok) return null;
+          const j = await r.json();
+          return {key, label:j.month || shortLabel(key), players:j.players || []};
+        }catch(e){ return null; }
+      }));
+      results.forEach(res=>{
+        if(!res) return;
+        state.data[res.key] = res;
+        res.players.forEach(p=>{
+          if(!state.nameIdx.has(p.name)) state.nameIdx.set(p.name, new Map());
+          state.nameIdx.get(p.name).set(res.key, p);
+        });
+      });
+      state.chrono = SEASONS.filter(k => state.data[k]);
 
-      console.log('Search term:', searchTerm);
-      console.log('Filtered players:', filtered.length);
-      console.log('Sample data:', filtered[0]);
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="no-results">Keine Spieler gefunden <span class="icon icon-search"><svg viewBox="0 0 20 20"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg></span></td></tr>';
+      if(state.chrono.length===0){
+        $('#list').innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div>Keine Daten gefunden.</div><div style="font-size:12px;margin-top:6px">Die Seite muss über einen Webserver laufen (nicht per Doppelklick), damit die JSON-Dateien geladen werden.</div></div>';
         return;
       }
+      buildMonths();
+      const fromHash = (location.hash||'').replace('#','');
+      const start = state.data[fromHash] ? fromHash : state.chrono[state.chrono.length-1];
+      selectMonth(start, false);
+    }
 
-      const html = filtered.map((p, idx) => {
-        const badge = p.rank <= 3 
-          ? `<span class="badge b${p.rank}">${p.rank}</span>`
-          : p.rank;
-        const checkIcon = '<span class="icon icon-check"><svg viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg></span>';
-        const attacks = p.bonus ? `${p.attacks} ${checkIcon}` : p.attacks;
-        const highlightClass = searchTerm && p.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-          ? 'highlight' 
-          : '';
-        
-        return `<tr class="${highlightClass}" style="animation-delay:${idx * 0.03}s">
-          <td class="rank">${badge}</td>
-          <td class="name">${p.name}</td>
-          <td class="points">${p.points}</td>
-          <td class="attacks">${attacks}</td>
-        </tr>`;
+    /* ---------- Monatswahl ---------- */
+    function buildMonths(){
+      const wrap = $('#months');
+      wrap.innerHTML = '';
+      [...state.chrono].reverse().forEach(key=>{
+        const b = document.createElement('button');
+        b.className = 'month-pill';
+        b.dataset.key = key;
+        b.textContent = state.data[key].label;
+        b.addEventListener('click', ()=>selectMonth(key, true));
+        wrap.appendChild(b);
+      });
+    }
+
+    function selectMonth(key, push){
+      state.current = key;
+      if(push){ try{ history.replaceState(null,'','#'+key); }catch(e){ location.hash = key; } }
+      $('#seasonLabel').textContent = state.data[key].label;
+      document.querySelectorAll('.month-pill').forEach(p=>p.classList.toggle('active', p.dataset.key===key));
+      // Reset von Suche/Filter/Sortierung bei Monatswechsel für klare Übersicht
+      state.search=''; $('#search').value=''; $('#clearSearch').classList.remove('show');
+      state.filter='all'; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.dataset.filter==='all'));
+      state.sort={key:'rank',dir:1}; syncSortHeaders();
+      renderAll();
+    }
+
+    /* ---------- Bewegung zum Vormonat ---------- */
+    function movementFor(name){
+      const idx = state.chrono.indexOf(state.current);
+      if(idx<=0) return null; // kein Vormonat verfügbar
+      const prevKey = state.chrono[idx-1];
+      const cur = state.nameIdx.get(name)?.get(state.current);
+      const prev = state.nameIdx.get(name)?.get(prevKey);
+      if(!cur) return null;
+      if(!prev) return {type:'new'};
+      const delta = prev.rank - cur.rank; // positiv = nach oben
+      if(delta>0) return {type:'up', n:delta};
+      if(delta<0) return {type:'down', n:-delta};
+      return {type:'same'};
+    }
+    function moveHtml(name){
+      const m = movementFor(name);
+      if(!m) return '';
+      if(m.type==='new')  return '<span class="move new" title="Neu in dieser Saison">NEU</span>';
+      if(m.type==='same') return '<span class="move same" title="Unverändert">±0</span>';
+      if(m.type==='up')   return `<span class="move up" title="${m.n} Plätze hoch">▲${m.n}</span>`;
+      return `<span class="move down" title="${m.n} Plätze runter">▼${m.n}</span>`;
+    }
+
+    /* ---------- Ansicht (Filter/Suche/Sortierung) ---------- */
+    function isDefaultView(){
+      return !state.search && state.filter==='all' && state.sort.key==='rank' && state.sort.dir===1;
+    }
+    function viewPlayers(){
+      let arr = state.data[state.current].players.slice();
+      if(state.search){
+        const q = state.search.toLowerCase();
+        arr = arr.filter(p => p.name.toLowerCase().includes(q));
+      }
+      if(state.filter==='bonus') arr = arr.filter(p=>p.bonus);
+      else if(state.filter==='active') arr = arr.filter(p=>p.attacks>0);
+      const {key,dir} = state.sort;
+      arr.sort((a,b)=>{
+        let r;
+        if(key==='name') r = a.name.localeCompare(b.name,'de',{sensitivity:'base'});
+        else r = a[key]-b[key];
+        if(r===0) r = a.rank-b.rank;
+        return r*dir;
+      });
+      return arr;
+    }
+
+    /* ---------- Render ---------- */
+    function renderAll(){ renderStats(); renderPodium(); renderList(); }
+
+    function renderStats(){
+      const ps = state.data[state.current].players;
+      const total = ps.length;
+      const active = ps.filter(p=>p.attacks>0);
+      const avg = active.length ? Math.round(active.reduce((s,p)=>s+p.points,0)/active.length) : 0;
+      const bonus = ps.filter(p=>p.bonus).length;
+      const best = ps.reduce((m,p)=>Math.max(m,p.points),0);
+      const cards = [
+        {v:total, l:'Spieler'},
+        {v:avg, l:'Ø Punkte*'},
+        {v:`${bonus}<small>/${total}</small>`, l:'7/7 Bonus'},
+        {v:best, l:'Bestwert'}
+      ];
+      $('#stats').innerHTML = cards.map(c=>`<div class="stat"><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`).join('');
+    }
+
+    function podCard(p, cls, medal){
+      if(!p) return '';
+      const att = p.bonus ? `${p.attacks}/7 ✓` : `${p.attacks}/7`;
+      const crown = cls==='p1' ? '<span class="crown" aria-hidden="true">👑</span>' : '';
+      return `<div class="pod ${cls}" role="button" tabindex="0" data-name="${esc(p.name)}">
+        ${crown}
+        <div class="prank">${medal} Platz ${p.rank}</div>
+        <div class="pname">${esc(p.name)}</div>
+        <div class="ppts">${p.points}<span style="font-size:.5em;color:var(--muted);font-weight:700"> Pkt</span></div>
+        <div class="pmeta"><span>${att}</span>${moveHtml(p.name)}</div>
+      </div>`;
+    }
+    function renderPodium(){
+      const pod = $('#podium');
+      if(!isDefaultView()){ pod.style.display='none'; pod.innerHTML=''; return; }
+      pod.style.display='';
+      const ps = state.data[state.current].players;
+      const top = ps.slice().sort((a,b)=>a.rank-b.rank);
+      pod.innerHTML = podCard(top[0],'p1','🥇') + podCard(top[1],'p2','🥈') + podCard(top[2],'p3','🥉');
+    }
+
+    const CHK = '<svg class="chk" viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>';
+
+    function rowHtml(p){
+      const top3 = p.rank<=3;
+      const badge = top3 ? `<span class="badge g${p.rank}">${p.rank}</span>` : `<span class="badge n">${p.rank}</span>`;
+      const att = p.bonus
+        ? `<span class="att full">${p.attacks}/7 ${CHK}</span>`
+        : `<span class="att">${p.attacks}/7</span>`;
+      const hl = state.search ? 'hl' : '';
+      return `<div class="row ${hl}" role="button" tabindex="0" data-name="${esc(p.name)}">
+        <div>${badge}</div>
+        <div class="name-cell"><div class="name-row"><span class="pname">${esc(p.name)}</span>${moveHtml(p.name)}</div></div>
+        <div class="pts">${p.points}</div>
+        ${att}
+      </div>`;
+    }
+
+    function renderList(){
+      const list = $('#list');
+      let arr = viewPlayers();
+      const def = isDefaultView();
+      const info = $('#resultsInfo');
+      if(def){
+        arr = arr.slice(3); // Top 3 stehen im Podium
+        info.hidden = true;
+      }else{
+        info.hidden = false;
+        info.textContent = `${arr.length} ${arr.length===1?'Treffer':'Treffer'}`;
+      }
+      if(arr.length===0){
+        list.innerHTML = '<div class="empty"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg><div>Keine Spieler gefunden</div></div>';
+        return;
+      }
+      list.innerHTML = arr.map(rowHtml).join('');
+    }
+
+    function syncSortHeaders(){
+      document.querySelectorAll('.row.head .th').forEach(th=>{
+        const on = th.dataset.sort===state.sort.key;
+        th.classList.toggle('active', on);
+        th.classList.toggle('asc', on && state.sort.dir===1);
+        th.classList.toggle('desc', on && state.sort.dir===-1);
+      });
+    }
+
+    /* ---------- Spieler-Detail ---------- */
+    function openPlayer(name){
+      const idxMap = state.nameIdx.get(name) || new Map();
+      const hist = state.chrono.map(k=>({k, rec:idxMap.get(k)||null}));
+      const played = hist.filter(h=>h.rec);
+      const active = played.filter(h=>h.rec.attacks>0);
+      const best = played.reduce((m,h)=>h.rec.points>m.pts?{pts:h.rec.points,k:h.k}:m,{pts:-1,k:null});
+      const medals = played.filter(h=>h.rec.rank<=3).length;
+      const sevens = played.filter(h=>h.rec.bonus).length;
+      const avg = active.length ? Math.round(active.reduce((s,h)=>s+h.rec.points,0)/active.length) : 0;
+      const bestRank = played.length ? Math.min(...played.map(h=>h.rec.rank)) : 0;
+      const cur = idxMap.get(state.current);
+      const maxPts = Math.max(1, ...played.map(h=>h.rec.points));
+
+      const bars = hist.map(h=>{
+        const isCur = h.k===state.current;
+        if(!h.rec){
+          return `<div class="bar-col"><div class="bar-val">–</div><div class="bar empty" style="height:4px"></div><div class="bar-lab">${shortLabel(h.k)}</div></div>`;
+        }
+        const hgt = Math.max(4, Math.round(h.rec.points/maxPts*100));
+        return `<div class="bar-col ${isCur?'cur':''}"><div class="bar-val">${h.rec.points}</div><div class="bar ${isCur?'cur':''}" style="height:${hgt}%"></div><div class="bar-lab">${shortLabel(h.k)}</div></div>`;
       }).join('');
-      
-      console.log('HTML length:', html.length);
-      tbody.innerHTML = html;
+
+      const subParts = [];
+      if(cur){ subParts.push(`Platz ${cur.rank} · ${cur.points} Punkte · ${cur.attacks}/7${cur.bonus?' ✓':''}`); }
+      else subParts.push('In dieser Saison nicht dabei');
+
+      openModal(`
+        <div class="modal-head">
+          <div>
+            <h2>${esc(name)}</h2>
+            <div class="sub">${subParts.join('')}</div>
+          </div>
+          <button class="icon-btn" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <div class="m-stats">
+            <div class="m-stat"><div class="v">${best.k?best.pts:'–'}</div><div class="l">Bestwert${best.k?' ('+shortLabel(best.k)+')':''}</div></div>
+            <div class="m-stat"><div class="v">${avg||'–'}</div><div class="l">Ø aktiv</div></div>
+            <div class="m-stat"><div class="v">${bestRank?'#'+bestRank:'–'}</div><div class="l">Bester Rang</div></div>
+            <div class="m-stat"><div class="v">${active.length}</div><div class="l">Saisons aktiv</div></div>
+            <div class="m-stat"><div class="v">${medals}</div><div class="l">Top 3</div></div>
+            <div class="m-stat"><div class="v">${sevens}</div><div class="l">7/7 Bonus</div></div>
+          </div>
+          <div class="sub" style="color:var(--muted);font-size:12px;margin-bottom:2px">Punkte je Saison</div>
+          <div class="chart">${bars}</div>
+        </div>
+      `);
     }
 
-    function updateSidebar() {
-      if (currentData.length === 0) return;
-
-      const top1 = currentData[0];
-      document.getElementById('top1Name').textContent = top1.name;
-      document.getElementById('top1Stats').textContent = `${top1.points} Punkte • ${top1.attacks}/7`;
-
-      const top3 = currentData.slice(0, 3);
-      document.getElementById('top3Line1').textContent = top3[0] ? `1) ${top3[0].name} — ${top3[0].points}` : '—';
-      document.getElementById('top3Line2').textContent = top3[1] ? `2) ${top3[1].name} — ${top3[1].points}` : '—';
-      document.getElementById('top3Line3').textContent = top3[2] ? `3) ${top3[2].name} — ${top3[2].points}` : '—';
+    function openInfo(){
+      openModal(`
+        <div class="modal-head">
+          <div><h2>Wie wird gewertet?</h2><div class="sub">CWL-Bonus-System</div></div>
+          <button class="icon-btn" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <ul class="info-list">
+            <li><span class="ic">★</span><div><b>Grundpunkte</b> pro Angriff: Sterne 0 / 5 / 10 / 20 plus 0,1 Punkte je Zerstörungs-Prozent.</div></li>
+            <li><span class="ic">⌂</span><div><b>Rathaus-Gewichtung:</b> Angriff auf ein höheres Rathaus zählt mehr (×1,25 je Stufe), auf ein niedrigeres weniger (×0,85 je Stufe, mindestens ×0,5). Gleiches Rathaus ×1.</div></li>
+            <li><span class="ic">+5</span><div><b>Bonus:</b> +5 Punkte bei genau 7 von 7 ausgeführten Angriffen.</div></li>
+            <li><span class="ic">≠</span><div><b>Zweitaccounts</b> werden einzeln gewertet und nicht zusammengelegt.</div></li>
+            <li><span class="ic">▲</span><div><b>Pfeile</b> zeigen die Rangveränderung gegenüber der Vorsaison; <b>NEU</b> = erstmals dabei.</div></li>
+            <li><span class="ic">☞</span><div><b>Tipp:</b> Auf einen Spieler tippen öffnet seinen Saison-Verlauf.</div></li>
+          </ul>
+          <div style="color:var(--muted-2);font-size:11px;margin-top:14px">* Ø Punkte zählt nur Spieler mit mindestens einem Angriff.</div>
+        </div>
+      `);
     }
 
-    function updateStats(data = allData) {
-      const total = data.length;
-      const avgPoints = total ? Math.round(data.reduce((sum, p) => sum + p.points, 0) / total) : 0;
-      const bonusCount = data.filter(p => p.bonus).length;
-      
-      document.getElementById('totalPlayers').textContent = total;
-      document.getElementById('avgPoints').textContent = avgPoints;
-      document.getElementById('bonusCount').textContent = `${bonusCount}/${total}`;
+    /* ---------- Modal-Mechanik ---------- */
+    let lastFocus = null;
+    function openModal(html){
+      closeModal();
+      const bd = document.createElement('div');
+      bd.className = 'backdrop'; bd.id = 'backdrop';
+      bd.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
+      document.body.appendChild(bd);
+      document.body.style.overflow = 'hidden';
+      lastFocus = document.activeElement;
+      bd.addEventListener('click', e=>{ if(e.target===bd) closeModal(); });
+      bd.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', closeModal));
+      const f = bd.querySelector('[data-close]'); if(f) f.focus();
+    }
+    function closeModal(){
+      const bd = $('#backdrop');
+      if(bd){ bd.remove(); document.body.style.overflow=''; if(lastFocus&&lastFocus.focus) lastFocus.focus(); }
     }
 
-    document.getElementById('searchBox').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.trim();
-      renderTable(searchTerm);
-      const filtered = searchTerm 
-        ? allData.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        : allData;
-      updateStats(filtered);
+    /* ---------- Events ---------- */
+    const searchEl = $('#search');
+    searchEl.addEventListener('input', e=>{
+      state.search = e.target.value.trim();
+      $('#clearSearch').classList.toggle('show', !!state.search);
+      renderPodium(); renderList();
+    });
+    $('#clearSearch').addEventListener('click', ()=>{
+      state.search=''; searchEl.value=''; $('#clearSearch').classList.remove('show');
+      searchEl.focus(); renderPodium(); renderList();
     });
 
-    // Custom Dropdown
-    const dropdown = document.getElementById('monthDropdown');
-    const monthBtn = document.getElementById('monthBtn');
-    const monthList = document.getElementById('monthList');
-
-    monthBtn.addEventListener('click', () => {
-      dropdown.classList.toggle('open');
+    document.querySelectorAll('.chip').forEach(c=>{
+      c.addEventListener('click', ()=>{
+        state.filter = c.dataset.filter;
+        document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active', x===c));
+        renderPodium(); renderList();
+      });
     });
 
-    monthList.addEventListener('click', (e) => {
-      const option = e.target.closest('.month-option');
-      if (!option) return;
-      
-      monthList.querySelectorAll('.month-option').forEach(o => o.classList.remove('active'));
-      option.classList.add('active');
-      monthBtn.textContent = option.textContent;
-      dropdown.classList.remove('open');
-      loadMonth(option.dataset.value);
+    document.querySelectorAll('.row.head .th').forEach(th=>{
+      th.addEventListener('click', ()=>{
+        const key = th.dataset.sort;
+        if(state.sort.key===key){ state.sort.dir *= -1; }
+        else { state.sort.key = key; state.sort.dir = (key==='name') ? 1 : -1; }
+        syncSortHeaders(); renderPodium(); renderList();
+      });
     });
 
-    document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('open');
+    // Delegierte Klicks auf Zeilen & Podium → Spieler-Detail
+    function bindRowOpen(container){
+      container.addEventListener('click', e=>{
+        const el = e.target.closest('[data-name]'); if(!el) return;
+        openPlayer(el.dataset.name);
+      });
+      container.addEventListener('keydown', e=>{
+        if(e.key!=='Enter' && e.key!==' ') return;
+        const el = e.target.closest('[data-name]'); if(!el) return;
+        e.preventDefault(); openPlayer(el.dataset.name);
+      });
+    }
+    bindRowOpen($('#list'));
+    bindRowOpen($('#podium'));
+
+    $('#infoBtn').addEventListener('click', openInfo);
+    $('#infoBtn2').addEventListener('click', openInfo);
+
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Escape'){
+        if($('#backdrop')) closeModal();
+        else if(state.search){ state.search=''; searchEl.value=''; $('#clearSearch').classList.remove('show'); renderPodium(); renderList(); }
+      }else if(e.key==='/' && document.activeElement!==searchEl){
+        e.preventDefault(); searchEl.focus();
       }
     });
 
-    // Initial load
-    loadMonth('2026-05');
+    window.addEventListener('hashchange', ()=>{
+      const k = (location.hash||'').replace('#','');
+      if(state.data[k] && k!==state.current) selectMonth(k, false);
+    });
+
+    loadAll();
+  })();
   </script>
 </body>
 </html>
