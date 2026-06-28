@@ -59,11 +59,12 @@
     /* ===========================================================
        Topbar
     =========================================================== */
-    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px}
     .brand{display:flex; align-items:center; gap:12px; min-width:0}
-    .logo{width:46px;height:46px;border-radius:13px;flex:none;display:grid;place-items:center;
+    .logo{width:46px;height:46px;border-radius:13px;flex:none;display:grid;place-items:center;overflow:hidden;
       background:linear-gradient(150deg,var(--accent),#7db0ff); color:#fff; box-shadow:0 8px 22px var(--accent-weak)}
     .logo svg{width:26px;height:26px}
+    .logo img{width:100%;height:100%;object-fit:contain}
     .brand h1{margin:0; font-size:clamp(18px,4.6vw,24px); font-weight:800; letter-spacing:.2px; line-height:1.15}
     .brand .subtitle{margin:2px 0 0; color:var(--muted); font-size:clamp(11px,3vw,13px)}
     .brand .subtitle b{color:var(--text); font-weight:600}
@@ -73,6 +74,17 @@
     .icon-btn:hover{background:var(--card-hover); border-color:var(--line-strong); transform:translateY(-1px)}
     .icon-btn svg{width:20px;height:20px}
     .icon-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+    /* ===========================================================
+       Tabs
+    =========================================================== */
+    .tabs{display:flex; gap:6px; margin-bottom:16px; background:var(--card); padding:5px; border-radius:14px;
+      border:1px solid var(--line); width:fit-content; max-width:100%}
+    .tab{border:0; background:none; color:var(--muted); font-weight:700; font-size:14px; padding:9px 18px;
+      border-radius:10px; cursor:pointer; transition:.18s var(--ease); white-space:nowrap}
+    .tab.active{background:var(--accent); color:var(--accent-ink); box-shadow:0 6px 18px var(--accent-weak)}
+    .tab:hover:not(.active){color:var(--text)}
+    .tab:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 
     /* ===========================================================
        Month selector
@@ -185,6 +197,8 @@
     .name-cell{min-width:0}
     .name-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
     .pname{font-weight:650; overflow-wrap:break-word; min-width:0}
+    .th-mini{font-size:10px; font-weight:800; color:var(--muted); background:var(--badge-n);
+      border:1px solid var(--line); border-radius:6px; padding:1px 6px; letter-spacing:.02em; white-space:nowrap}
     .move{display:inline-flex; align-items:center; gap:2px; font-size:11px; font-weight:800; font-variant-numeric:tabular-nums;
       padding:2px 6px; border-radius:999px; line-height:1.4}
     .move.up{color:var(--up); background:color-mix(in srgb,var(--up) 16%,transparent)}
@@ -209,6 +223,105 @@
     @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     /* ===========================================================
+       Panels / generic cards (Profil + Analyse)
+    =========================================================== */
+    .panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+      padding:16px; box-shadow:var(--shadow); margin-bottom:16px}
+    .panel > h3{margin:0 0 4px; font-size:15px; font-weight:800; display:flex; align-items:center; gap:8px}
+    .panel .psub{color:var(--muted); font-size:12px; margin:0 0 12px}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px}
+    @media(max-width:680px){ .grid2{grid-template-columns:1fr; gap:0} }
+
+    .back-btn{display:inline-flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--line);
+      color:var(--muted); padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; font-size:13px; margin-bottom:14px}
+    .back-btn:hover{color:var(--text); background:var(--card-hover); border-color:var(--line-strong)}
+    .back-btn svg{width:15px;height:15px}
+
+    /* Profil-Header */
+    .prof-head{display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin-bottom:18px}
+    .prof-avatar{width:60px;height:60px;border-radius:16px;flex:none;display:grid;place-items:center;
+      background:linear-gradient(150deg,var(--accent),#7db0ff); color:#fff; font-weight:900; font-size:24px;
+      box-shadow:0 8px 22px var(--accent-weak)}
+    .prof-id{min-width:0; flex:1 1 200px}
+    .prof-id h1{margin:0; font-size:clamp(22px,5.5vw,30px); font-weight:900; line-height:1.1; overflow-wrap:break-word}
+    .prof-id .pid-sub{color:var(--muted); font-size:13px; margin-top:4px}
+    .chip-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px}
+    .tag-chip{display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
+      border:1px solid var(--line); background:var(--card); font-size:12px; font-weight:700; color:var(--text)}
+    .tag-chip img{width:16px;height:16px;border-radius:3px;object-fit:contain}
+    .tag-chip.th{background:var(--accent-weak); border-color:transparent}
+    .tag-chip.role{color:var(--muted)}
+
+    /* Metric grid */
+    .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px}
+    @media(max-width:560px){ .metrics{grid-template-columns:repeat(2,1fr)} }
+    .metric{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 8px; text-align:center}
+    .metric .v{font-weight:900; font-size:clamp(16px,4.4vw,20px); font-variant-numeric:tabular-nums; line-height:1.1}
+    .metric .l{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:5px}
+
+    /* CSS-Balkenchart (Punkte je Saison etc.) */
+    .chart{display:flex; align-items:flex-end; gap:8px; height:140px; padding:8px 2px 0; margin-top:6px; overflow-x:auto}
+    .bar-col{flex:1 0 36px; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; min-width:0}
+    .bar-val{font-size:11px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--muted)}
+    .bar{width:100%; max-width:38px; border-radius:7px 7px 3px 3px; background:var(--accent-weak); transition:height .4s var(--ease); min-height:3px}
+    .bar.cur{background:linear-gradient(180deg,var(--accent),#7db0ff)}
+    .bar.empty{background:var(--badge-n)}
+    .bar-lab{font-size:11px; color:var(--muted-2); white-space:nowrap}
+    .bar-col.cur .bar-lab{color:var(--accent); font-weight:700}
+
+    /* Rang-Verlauf (SVG-Linie) */
+    .rank-chart{width:100%; height:auto; overflow:visible; margin-top:8px}
+    .rc-line{stroke:var(--accent); stroke-width:2.5; fill:none; stroke-linejoin:round; stroke-linecap:round}
+    .rc-dot{fill:var(--accent)}
+    .rc-val{fill:var(--muted); font-size:11px; font-weight:800; font-variant-numeric:tabular-nums}
+    .rc-lab{fill:var(--muted-2); font-size:10px}
+
+    /* Horizontale Balken */
+    .hbars{display:flex; flex-direction:column; gap:9px; margin-top:8px}
+    .hbar{display:grid; grid-template-columns:96px 1fr 44px; gap:10px; align-items:center; font-size:12px}
+    .hbar .lab{color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .hbar .track{height:9px; background:var(--badge-n); border-radius:999px; overflow:hidden}
+    .hbar .fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),#7db0ff); min-width:2px; transition:width .4s var(--ease)}
+    .hbar .val{text-align:right; font-weight:800; font-variant-numeric:tabular-nums; color:var(--text)}
+
+    /* Sterne-Verteilung */
+    .stardist{display:flex; height:16px; border-radius:999px; overflow:hidden; background:var(--badge-n); margin:10px 0 8px}
+    .stardist span{display:block; transition:width .4s var(--ease)}
+    .sd3{background:#2fd16a}.sd2{background:#7db0ff}.sd1{background:var(--gold)}.sd0{background:var(--down)}
+    .sd-legend{display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:var(--muted)}
+    .sd-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+    /* All-Time / Roster Ranglisten */
+    .rank-list{display:flex; flex-direction:column; margin-top:4px}
+    .rank-item{display:grid; grid-template-columns:24px 1fr auto; gap:10px; align-items:center; padding:9px 4px;
+      border-bottom:1px solid var(--line); cursor:pointer; transition:background .15s}
+    .rank-item:last-child{border-bottom:0}
+    .rank-item:hover{background:var(--card)}
+    .rank-item .ri-rank{color:var(--muted); font-weight:800; font-variant-numeric:tabular-nums; font-size:13px; text-align:center}
+    .rank-item .ri-name{font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:7px}
+    .rank-item .ri-val{font-weight:900; font-variant-numeric:tabular-nums; font-size:14px}
+    .rank-item .ri-sub{color:var(--muted-2); font-size:11px; font-weight:600}
+
+    /* Season-Tabelle im Profil */
+    .seas-tab{margin-top:8px; font-size:13px}
+    .seas-tab .st-row{display:grid; grid-template-columns:minmax(0,1.4fr) 44px 60px 56px 52px; gap:8px; align-items:center;
+      padding:9px 4px; border-bottom:1px solid var(--line)}
+    .seas-tab .st-row.head{color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.07em; font-weight:700}
+    .seas-tab .st-row:last-child{border-bottom:0}
+    .seas-tab .st-name{font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+    .seas-tab .num{text-align:right; font-variant-numeric:tabular-nums}
+    .seas-tab .muted{color:var(--muted)}
+
+    /* Clan-Banner */
+    .clan-banner{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .clan-banner img{width:64px;height:64px;flex:none}
+    .clan-banner h2{margin:0;font-size:clamp(18px,4.6vw,22px);font-weight:900}
+    .clan-banner .cb-sub{color:var(--muted); font-size:13px; margin-top:3px}
+    .clan-desc{color:var(--muted); font-size:13px; margin-top:12px; line-height:1.6}
+
+    .note-inline{color:var(--muted-2); font-size:12px; margin-top:10px; line-height:1.5}
+
+    /* ===========================================================
        Modal
     =========================================================== */
     .backdrop{position:fixed; inset:0; background:rgba(4,7,14,.62); backdrop-filter:blur(4px);
@@ -225,18 +338,6 @@
     .modal-head h2{margin:0; font-size:20px; font-weight:800; word-break:break-word}
     .modal-head .sub{color:var(--muted); font-size:13px; margin-top:3px}
     .modal-body{padding:4px 20px 22px}
-    .m-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:6px 0 18px}
-    .m-stat{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 8px; text-align:center}
-    .m-stat .v{font-weight:900; font-size:17px; font-variant-numeric:tabular-nums}
-    .m-stat .l{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px}
-    .chart{display:flex; align-items:flex-end; gap:8px; height:130px; padding:8px 2px 0; margin-top:6px}
-    .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; min-width:0}
-    .bar-val{font-size:11px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--muted)}
-    .bar{width:100%; max-width:34px; border-radius:7px 7px 3px 3px; background:var(--accent-weak); transition:height .4s var(--ease); min-height:3px}
-    .bar.cur{background:linear-gradient(180deg,var(--accent),#7db0ff)}
-    .bar.empty{background:var(--badge-n)}
-    .bar-lab{font-size:11px; color:var(--muted-2); white-space:nowrap}
-    .bar-col.cur .bar-lab{color:var(--accent); font-weight:700}
     .info-list{margin:0; padding:0; list-style:none}
     .info-list li{padding:11px 0; border-bottom:1px solid var(--line); display:flex; gap:11px; align-items:flex-start; font-size:14px; color:var(--muted)}
     .info-list li:last-child{border-bottom:0}
@@ -247,7 +348,6 @@
     .credits{text-align:center; padding:30px 16px 8px; color:var(--muted); font-size:13px}
     .credits strong{color:var(--text); font-weight:600}
 
-    /* Kompaktere Tabelle auf schmalen Handys: mehr Platz für Namen */
     @media(max-width:440px){
       .row{grid-template-columns:38px minmax(0,1fr) 50px 58px; gap:8px; padding:12px 11px}
       .pname{font-size:14px}
@@ -268,12 +368,12 @@
     <!-- Topbar -->
     <header class="topbar">
       <div class="brand">
-        <div class="logo" aria-hidden="true">
+        <div class="logo" id="brandLogo" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v3a5 5 0 0 1-3 4.58V13a4 4 0 0 1-3 3.87V19h3v2H8v-2h3v-2.13A4 4 0 0 1 8 13v-1.42A5 5 0 0 1 5 7V4Z" fill="currentColor"/><path d="M3 5h2v2a3 3 0 0 1-2-2.83V5Zm16 0h2v.17A3 3 0 0 1 19 7V5Z" fill="currentColor" opacity=".7"/></svg>
         </div>
         <div>
           <h1>CWL Rangliste</h1>
-          <p class="subtitle">Clan War League • <b id="seasonLabel">…</b></p>
+          <p class="subtitle"><b id="seasonLabel">…</b></p>
         </div>
       </div>
       <div class="topbar-actions">
@@ -284,44 +384,14 @@
       </div>
     </header>
 
-    <!-- Month selector -->
-    <nav class="months" id="months" aria-label="Saison wählen"></nav>
+    <!-- Tabs -->
+    <nav class="tabs" id="tabs" aria-label="Ansicht">
+      <button class="tab" data-nav="#" id="tabBoard">Rangliste</button>
+      <button class="tab" data-nav="#a" id="tabAnalyse">Analyse</button>
+    </nav>
 
-    <!-- Stats -->
-    <section class="stats" id="stats" aria-label="Statistiken"></section>
-
-    <!-- Controls -->
-    <div class="controls">
-      <div class="search">
-        <svg class="s-ico" viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
-        <input id="search" type="text" placeholder="Spieler suchen…" autocomplete="off" aria-label="Spieler suchen" />
-        <button class="clear" id="clearSearch" aria-label="Suche löschen">✕</button>
-      </div>
-      <div class="chips" id="filters" role="group" aria-label="Filter">
-        <button class="chip active" data-filter="all">Alle</button>
-        <button class="chip" data-filter="bonus">7/7</button>
-        <button class="chip" data-filter="active">Aktiv</button>
-      </div>
-    </div>
-
-    <!-- Podium -->
-    <section class="podium" id="podium" aria-label="Top 3"></section>
-
-    <!-- Leaderboard -->
-    <section class="board">
-      <div id="resultsInfo" class="results-info" hidden></div>
-      <div class="row head">
-        <button class="th col-rank active asc" data-sort="rank">#<span class="caret"></span></button>
-        <button class="th col-name" data-sort="name">Spieler<span class="caret"></span></button>
-        <button class="th col-pts" data-sort="points">Punkte<span class="caret"></span></button>
-        <button class="th col-att" data-sort="attacks">Angriffe<span class="caret"></span></button>
-      </div>
-      <div class="plist" id="list"></div>
-      <div class="note">
-        Grundpunkte = Sterne (0/5/10/20) + 0,1 × Zerstörung %, gewichtet nach Rathaus: höher ×1,25/Stufe, niedriger ×0,85/Stufe • Bonus +5 bei 7/7 • Jeder Account zählt einzeln.
-        <button id="infoBtn2">Mehr&nbsp;dazu</button>
-      </div>
-    </section>
+    <!-- View container (per route gefüllt) -->
+    <main id="view"></main>
 
     <footer class="credits">Seite, Daten &amp; Berechnungen von <strong>AGDNoob</strong> &lt;3</footer>
   </div>
@@ -330,24 +400,23 @@
   (function(){
     "use strict";
 
-    /* Verfügbare Saisons in chronologischer Reihenfolge.
-       Neuen Monat einfach hier ergänzen (z. B. '2026-07'). */
-    const SEASONS = ['2026-01','2026-02','2026-04','2026-05','2026-06','2026-06-2'];
-    const MON_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-
     const state = {
-      data:{},            // key -> {key,label,players[]}
-      chrono:[],          // geladene keys, chronologisch aufsteigend
-      nameIdx:new Map(),  // name -> Map(key -> record)
-      current:null,
-      search:'',
-      filter:'all',
-      sort:{key:'rank', dir:1}
+      manifest:null, clan:null,
+      rosterByTag:new Map(), rosterByName:new Map(),
+      seasons:{}, chrono:[], nameIdx:new Map(),
+      view:'board', curSeason:null,
+      search:'', filter:'all', sort:{key:'rank', dir:1}
     };
 
     const $ = s => document.querySelector(s);
-    const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const shortLabel = key => { const m = +key.split('-')[1]; return MON_SHORT[m-1] || key; };
+    const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const MON_SHORT = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    function seasonShort(key){
+      const m = String(key).match(/(\d{4})-(\d{2})(?:-(\d+))?/);
+      if(!m) return key;
+      return (MON_SHORT[+m[2]-1]||key) + (m[3] ? '·'+m[3] : '');
+    }
+    const labelOf = key => (state.seasons[key] && state.seasons[key].label) || seasonShort(key);
 
     /* ---------- Theme ---------- */
     function setTheme(t){
@@ -359,126 +428,155 @@
         : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>';
     }
     (function initTheme(){
-      let t = 'dark';
-      try{ t = localStorage.getItem('cwl-theme') || 'dark'; }catch(e){}
+      let t='dark'; try{ t=localStorage.getItem('cwl-theme')||'dark'; }catch(e){}
       setTheme(t);
     })();
-    $('#themeBtn').addEventListener('click', ()=>{
-      setTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
-    });
+    $('#themeBtn').addEventListener('click', ()=> setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+    $('#infoBtn').addEventListener('click', openInfo);
 
     /* ---------- Laden ---------- */
-    function skeleton(){
-      $('#list').innerHTML = Array(6).fill('<div class="sk"></div>').join('');
+    function errorState(msg){
+      $('#view').innerHTML = `<div class="board"><div class="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <div>${esc(msg)}</div>
+        <div style="font-size:12px;margin-top:6px">Die Seite muss über einen Webserver laufen (nicht per Doppelklick), damit die JSON-Dateien geladen werden.</div>
+      </div></div>`;
     }
 
     async function loadAll(){
-      skeleton();
-      const results = await Promise.all(SEASONS.map(async key=>{
+      $('#view').innerHTML = '<div class="board">'+Array(6).fill('<div class="sk"></div>').join('')+'</div>';
+      let manifest;
+      try{
+        const r = await fetch('data/manifest.json', {cache:'no-store'});
+        if(!r.ok) throw 0;
+        manifest = await r.json();
+      }catch(e){ errorState('Manifest konnte nicht geladen werden.'); return; }
+      state.manifest = manifest;
+
+      // Clan-Snapshot (optional)
+      try{
+        const rc = await fetch('data/clan.json', {cache:'no-store'});
+        if(rc.ok){
+          state.clan = await rc.json();
+          (state.clan.members||[]).forEach(m=>{
+            if(m.tag) state.rosterByTag.set(m.tag, m);
+            if(m.name) state.rosterByName.set(m.name, m);
+          });
+        }
+      }catch(e){ /* Snapshot optional */ }
+
+      // Saisons laden
+      const seasons = manifest.seasons || [];
+      const loaded = await Promise.all(seasons.map(async s=>{
         try{
-          const r = await fetch('data/'+key+'.json', {cache:'no-store'});
+          const r = await fetch('data/'+(s.file||('seasons/'+s.key+'.json')), {cache:'no-store'});
           if(!r.ok) return null;
           const j = await r.json();
-          return {key, label:j.month || shortLabel(key), players:j.players || []};
+          return {key:s.key, label:j.month||s.label||seasonShort(s.key), players:j.players||[]};
         }catch(e){ return null; }
       }));
-      results.forEach(res=>{
+      loaded.forEach(res=>{
         if(!res) return;
-        state.data[res.key] = res;
+        state.seasons[res.key] = res;
         res.players.forEach(p=>{
           if(!state.nameIdx.has(p.name)) state.nameIdx.set(p.name, new Map());
           state.nameIdx.get(p.name).set(res.key, p);
         });
       });
-      state.chrono = SEASONS.filter(k => state.data[k]);
+      state.chrono = seasons.map(s=>s.key).filter(k=>state.seasons[k]);
 
-      if(state.chrono.length===0){
-        $('#list').innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><div>Keine Daten gefunden.</div><div style="font-size:12px;margin-top:6px">Die Seite muss über einen Webserver laufen (nicht per Doppelklick), damit die JSON-Dateien geladen werden.</div></div>';
-        return;
+      if(state.chrono.length===0){ errorState('Keine Saison-Daten gefunden.'); return; }
+      if(state.clan && state.clan.clan){
+        if(state.clan.clan.badge){
+          $('#brandLogo').innerHTML = `<img src="${esc(state.clan.clan.badge)}" alt="" onerror="this.style.display='none'">`;
+        }
       }
-      buildMonths();
-      const fromHash = (location.hash||'').replace('#','');
-      const start = state.data[fromHash] ? fromHash : state.chrono[state.chrono.length-1];
-      selectMonth(start, false);
+      route();
     }
 
-    /* ---------- Monatswahl ---------- */
-    function buildMonths(){
-      const wrap = $('#months');
-      wrap.innerHTML = '';
-      [...state.chrono].reverse().forEach(key=>{
-        const b = document.createElement('button');
-        b.className = 'month-pill';
-        b.dataset.key = key;
-        b.textContent = state.data[key].label;
-        b.addEventListener('click', ()=>selectMonth(key, true));
-        wrap.appendChild(b);
-      });
+    /* ---------- Router ---------- */
+    function parseHash(){
+      const raw = location.hash.replace(/^#/,'');
+      if(!raw) return {view:'board'};
+      if(raw==='a' || raw==='analyse') return {view:'analyse'};
+      if(raw.startsWith('p/')) return {view:'profile', name:decodeURIComponent(raw.slice(2))};
+      if(raw.startsWith('s/')) return {view:'board', season:decodeURIComponent(raw.slice(2))};
+      const k = decodeURIComponent(raw);
+      if(state.seasons[k]) return {view:'board', season:k};
+      return {view:'board'};
+    }
+    function nav(hash){ if(location.hash===hash){ route(); } else { location.hash = hash; } }
+    function route(){
+      const r = parseHash();
+      state.view = r.view;
+      window.scrollTo(0,0);
+      $('#tabBoard').classList.toggle('active', r.view==='board');
+      $('#tabAnalyse').classList.toggle('active', r.view==='analyse');
+      if(r.view==='analyse'){ renderAnalyse(); $('#seasonLabel').textContent = (state.clan&&state.clan.clan&&state.clan.clan.name)||'Analyse'; }
+      else if(r.view==='profile'){ renderProfile(r.name); }
+      else { renderBoard(r.season); }
+    }
+    window.addEventListener('hashchange', route);
+
+    /* ===========================================================
+       View: Rangliste (Board)
+    =========================================================== */
+    function renderBoard(seasonKey){
+      const key = (seasonKey && state.seasons[seasonKey]) ? seasonKey : state.chrono[state.chrono.length-1];
+      state.curSeason = key;
+      state.search=''; state.filter='all'; state.sort={key:'rank',dir:1};
+      $('#seasonLabel').textContent = 'Clan War League • '+labelOf(key);
+
+      const pills = [...state.chrono].reverse()
+        .map(k=>`<button class="month-pill ${k===key?'active':''}" data-season="${esc(k)}">${esc(labelOf(k))}</button>`).join('');
+
+      $('#view').innerHTML = `
+        <nav class="months" id="months" aria-label="Saison wählen">${pills}</nav>
+        <section class="stats" id="stats" aria-label="Statistiken"></section>
+        <div class="controls">
+          <div class="search">
+            <svg class="s-ico" viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg>
+            <input id="search" type="text" placeholder="Spieler suchen…" autocomplete="off" aria-label="Spieler suchen" />
+            <button class="clear" id="clearSearch" data-action="clearSearch" aria-label="Suche löschen">✕</button>
+          </div>
+          <div class="chips" id="filters" role="group" aria-label="Filter">
+            <button class="chip active" data-filter="all">Alle</button>
+            <button class="chip" data-filter="bonus">7/7</button>
+            <button class="chip" data-filter="active">Aktiv</button>
+          </div>
+        </div>
+        <section class="podium" id="podium" aria-label="Top 3"></section>
+        <section class="board">
+          <div id="resultsInfo" class="results-info" hidden></div>
+          <div class="row head">
+            <button class="th col-rank active asc" data-sort="rank">#<span class="caret"></span></button>
+            <button class="th col-name" data-sort="name">Spieler<span class="caret"></span></button>
+            <button class="th col-pts" data-sort="points">Punkte<span class="caret"></span></button>
+            <button class="th col-att" data-sort="attacks">Angriffe<span class="caret"></span></button>
+          </div>
+          <div class="plist" id="list"></div>
+          <div class="note">
+            Grundpunkte = Sterne (0/5/10/20) + 0,1 × Zerstörung %, gewichtet nach Rathaus: höher ×1,25/Stufe, niedriger ×0,85/Stufe • Bonus +5 bei 7/7 • Jeder Account zählt einzeln.
+            <button data-action="info">Mehr&nbsp;dazu</button>
+          </div>
+        </section>`;
+      renderStats(); renderPodium(); renderList(); syncSortHeaders();
     }
 
-    function selectMonth(key, push){
-      state.current = key;
-      if(push){ try{ history.replaceState(null,'','#'+key); }catch(e){ location.hash = key; } }
-      $('#seasonLabel').textContent = state.data[key].label;
-      document.querySelectorAll('.month-pill').forEach(p=>p.classList.toggle('active', p.dataset.key===key));
-      // Reset von Suche/Filter/Sortierung bei Monatswechsel für klare Übersicht
-      state.search=''; $('#search').value=''; $('#clearSearch').classList.remove('show');
-      state.filter='all'; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.dataset.filter==='all'));
-      state.sort={key:'rank',dir:1}; syncSortHeaders();
-      renderAll();
+    function selectSeason(key){
+      if(!state.seasons[key]) return;
+      try{ history.replaceState(null,'','#s/'+encodeURIComponent(key)); }catch(e){}
+      renderBoard(key);
     }
 
-    /* ---------- Bewegung zum Vormonat ---------- */
-    function movementFor(name){
-      const idx = state.chrono.indexOf(state.current);
-      if(idx<=0) return null; // kein Vormonat verfügbar
-      const prevKey = state.chrono[idx-1];
-      const cur = state.nameIdx.get(name)?.get(state.current);
-      const prev = state.nameIdx.get(name)?.get(prevKey);
-      if(!cur) return null;
-      if(!prev) return {type:'new'};
-      const delta = prev.rank - cur.rank; // positiv = nach oben
-      if(delta>0) return {type:'up', n:delta};
-      if(delta<0) return {type:'down', n:-delta};
-      return {type:'same'};
+    function thFor(p){
+      if(p && typeof p.th==='number') return p.th;
+      const r = state.rosterByName.get(p && p.name);
+      return r && r.th ? r.th : null;
     }
-    function moveHtml(name){
-      const m = movementFor(name);
-      if(!m) return '';
-      if(m.type==='new')  return '<span class="move new" title="Neu in dieser Saison">NEU</span>';
-      if(m.type==='same') return '<span class="move same" title="Unverändert">±0</span>';
-      if(m.type==='up')   return `<span class="move up" title="${m.n} Plätze hoch">▲${m.n}</span>`;
-      return `<span class="move down" title="${m.n} Plätze runter">▼${m.n}</span>`;
-    }
-
-    /* ---------- Ansicht (Filter/Suche/Sortierung) ---------- */
-    function isDefaultView(){
-      return !state.search && state.filter==='all' && state.sort.key==='rank' && state.sort.dir===1;
-    }
-    function viewPlayers(){
-      let arr = state.data[state.current].players.slice();
-      if(state.search){
-        const q = state.search.toLowerCase();
-        arr = arr.filter(p => p.name.toLowerCase().includes(q));
-      }
-      if(state.filter==='bonus') arr = arr.filter(p=>p.bonus);
-      else if(state.filter==='active') arr = arr.filter(p=>p.attacks>0);
-      const {key,dir} = state.sort;
-      arr.sort((a,b)=>{
-        let r;
-        if(key==='name') r = a.name.localeCompare(b.name,'de',{sensitivity:'base'});
-        else r = a[key]-b[key];
-        if(r===0) r = a.rank-b.rank;
-        return r*dir;
-      });
-      return arr;
-    }
-
-    /* ---------- Render ---------- */
-    function renderAll(){ renderStats(); renderPodium(); renderList(); }
 
     function renderStats(){
-      const ps = state.data[state.current].players;
+      const ps = state.seasons[state.curSeason].players;
       const total = ps.length;
       const active = ps.filter(p=>p.attacks>0);
       const avg = active.length ? Math.round(active.reduce((s,p)=>s+p.points,0)/active.length) : 0;
@@ -491,6 +589,46 @@
         {v:best, l:'Bestwert'}
       ];
       $('#stats').innerHTML = cards.map(c=>`<div class="stat"><div class="v">${c.v}</div><div class="l">${c.l}</div></div>`).join('');
+    }
+
+    function isDefaultView(){ return !state.search && state.filter==='all' && state.sort.key==='rank' && state.sort.dir===1; }
+    function viewPlayers(){
+      let arr = state.seasons[state.curSeason].players.slice();
+      if(state.search){ const q=state.search.toLowerCase(); arr=arr.filter(p=>p.name.toLowerCase().includes(q)); }
+      if(state.filter==='bonus') arr=arr.filter(p=>p.bonus);
+      else if(state.filter==='active') arr=arr.filter(p=>p.attacks>0);
+      const {key,dir}=state.sort;
+      arr.sort((a,b)=>{
+        let r;
+        if(key==='name') r=a.name.localeCompare(b.name,'de',{sensitivity:'base'});
+        else r=a[key]-b[key];
+        if(r===0) r=a.rank-b.rank;
+        return r*dir;
+      });
+      return arr;
+    }
+
+    function movementFor(name){
+      const idx = state.chrono.indexOf(state.curSeason);
+      if(idx<=0) return null;
+      const prevKey = state.chrono[idx-1];
+      const m = state.nameIdx.get(name);
+      const cur = m && m.get(state.curSeason);
+      const prev = m && m.get(prevKey);
+      if(!cur) return null;
+      if(!prev) return {type:'new'};
+      const d = prev.rank - cur.rank;
+      if(d>0) return {type:'up', n:d};
+      if(d<0) return {type:'down', n:-d};
+      return {type:'same'};
+    }
+    function moveHtml(name){
+      const m = movementFor(name);
+      if(!m) return '';
+      if(m.type==='new')  return '<span class="move new" title="Neu in dieser Saison">NEU</span>';
+      if(m.type==='same') return '<span class="move same" title="Unverändert">±0</span>';
+      if(m.type==='up')   return `<span class="move up" title="${m.n} Plätze hoch">▲${m.n}</span>`;
+      return `<span class="move down" title="${m.n} Plätze runter">▼${m.n}</span>`;
     }
 
     function podCard(p, cls, medal){
@@ -506,50 +644,41 @@
       </div>`;
     }
     function renderPodium(){
-      const pod = $('#podium');
+      const pod = $('#podium'); if(!pod) return;
       if(!isDefaultView()){ pod.style.display='none'; pod.innerHTML=''; return; }
       pod.style.display='';
-      const ps = state.data[state.current].players;
-      const top = ps.slice().sort((a,b)=>a.rank-b.rank);
+      const top = state.seasons[state.curSeason].players.slice().sort((a,b)=>a.rank-b.rank);
       pod.innerHTML = podCard(top[0],'p1','🥇') + podCard(top[1],'p2','🥈') + podCard(top[2],'p3','🥉');
     }
 
     const CHK = '<svg class="chk" viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>';
-
     function rowHtml(p){
       const top3 = p.rank<=3;
       const badge = top3 ? `<span class="badge g${p.rank}">${p.rank}</span>` : `<span class="badge n">${p.rank}</span>`;
-      const att = p.bonus
-        ? `<span class="att full">${p.attacks}/7 ${CHK}</span>`
-        : `<span class="att">${p.attacks}/7</span>`;
+      const att = p.bonus ? `<span class="att full">${p.attacks}/7 ${CHK}</span>` : `<span class="att">${p.attacks}/7</span>`;
+      const th = thFor(p);
+      const thChip = th ? `<span class="th-mini">RH${th}</span>` : '';
       const hl = state.search ? 'hl' : '';
       return `<div class="row ${hl}" role="button" tabindex="0" data-name="${esc(p.name)}">
         <div>${badge}</div>
-        <div class="name-cell"><div class="name-row"><span class="pname">${esc(p.name)}</span>${moveHtml(p.name)}</div></div>
+        <div class="name-cell"><div class="name-row"><span class="pname">${esc(p.name)}</span>${thChip}${moveHtml(p.name)}</div></div>
         <div class="pts">${p.points}</div>
         ${att}
       </div>`;
     }
-
     function renderList(){
-      const list = $('#list');
+      const list = $('#list'); if(!list) return;
       let arr = viewPlayers();
       const def = isDefaultView();
       const info = $('#resultsInfo');
-      if(def){
-        arr = arr.slice(3); // Top 3 stehen im Podium
-        info.hidden = true;
-      }else{
-        info.hidden = false;
-        info.textContent = `${arr.length} ${arr.length===1?'Treffer':'Treffer'}`;
-      }
+      if(def){ arr=arr.slice(3); if(info) info.hidden=true; }
+      else if(info){ info.hidden=false; info.textContent = `${arr.length} Treffer`; }
       if(arr.length===0){
         list.innerHTML = '<div class="empty"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/></svg><div>Keine Spieler gefunden</div></div>';
         return;
       }
       list.innerHTML = arr.map(rowHtml).join('');
     }
-
     function syncSortHeaders(){
       document.querySelectorAll('.row.head .th').forEach(th=>{
         const on = th.dataset.sort===state.sort.key;
@@ -559,56 +688,292 @@
       });
     }
 
-    /* ---------- Spieler-Detail ---------- */
-    function openPlayer(name){
-      const idxMap = state.nameIdx.get(name) || new Map();
-      const hist = state.chrono.map(k=>({k, rec:idxMap.get(k)||null}));
+    /* ===========================================================
+       View: Spieler-Profil
+    =========================================================== */
+    function rosterFor(name, recs){
+      let tag=null;
+      for(const r of recs){ if(r && r.tag){ tag=r.tag; break; } }
+      if(tag && state.rosterByTag.has(tag)) return state.rosterByTag.get(tag);
+      if(state.rosterByName.has(name)) return state.rosterByName.get(name);
+      return null;
+    }
+
+    function rankChart(hist){
+      const pts = hist.map((h,i)=>({i, k:h.k, rank:h.rec?h.rec.rank:null}));
+      const played = pts.filter(p=>p.rank!=null);
+      if(played.length<1) return '<div class="psub">Keine Daten.</div>';
+      const ranks = played.map(p=>p.rank);
+      const minR=Math.min(...ranks), maxR=Math.max(...ranks);
+      const n=hist.length;
+      const W=Math.max(280, n*58), H=150, padX=26, padTop=26, padBot=26;
+      const xOf=i=> padX + (n<=1?(W-2*padX)/2:(i/(n-1))*(W-2*padX));
+      const yOf=r=> (maxR===minR) ? (padTop+(H-padTop-padBot)/2) : (padTop + (r-minR)/(maxR-minR)*(H-padTop-padBot));
+      let d='';
+      played.forEach((p,idx)=>{ d += (idx?' L':'M')+xOf(p.i).toFixed(1)+' '+yOf(p.rank).toFixed(1); });
+      const dots = played.map(p=>`<circle cx="${xOf(p.i).toFixed(1)}" cy="${yOf(p.rank).toFixed(1)}" r="4" class="rc-dot"/><text x="${xOf(p.i).toFixed(1)}" y="${(yOf(p.rank)-9).toFixed(1)}" class="rc-val" text-anchor="middle">#${p.rank}</text>`).join('');
+      const labs = pts.map(p=>`<text x="${xOf(p.i).toFixed(1)}" y="${H-7}" class="rc-lab" text-anchor="middle">${esc(seasonShort(p.k))}</text>`).join('');
+      return `<svg class="rank-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rang-Verlauf">${played.length>1?`<path d="${d}" class="rc-line"/>`:''}${dots}${labs}</svg>`;
+    }
+
+    function pointsBars(hist, curKey){
+      const maxP = Math.max(1, ...hist.filter(h=>h.rec).map(h=>h.rec.points));
+      return '<div class="chart">'+hist.map(h=>{
+        const cur = h.k===curKey;
+        if(!h.rec) return `<div class="bar-col"><div class="bar-val">–</div><div class="bar empty" style="height:4px"></div><div class="bar-lab">${esc(seasonShort(h.k))}</div></div>`;
+        const hgt = Math.max(4, Math.round(h.rec.points/maxP*100));
+        return `<div class="bar-col ${cur?'cur':''}"><div class="bar-val">${h.rec.points}</div><div class="bar ${cur?'cur':''}" style="height:${hgt}%"></div><div class="bar-lab">${esc(seasonShort(h.k))}</div></div>`;
+      }).join('')+'</div>';
+    }
+
+    function renderProfile(name){
+      const idx = state.nameIdx.get(name);
+      const hist = state.chrono.map(k=>({k, rec: idx ? (idx.get(k)||null) : null}));
       const played = hist.filter(h=>h.rec);
+      const recsArr = played.map(h=>h.rec);
+      const member = rosterFor(name, recsArr);
+
+      if(played.length===0 && !member){
+        $('#view').innerHTML = `<button class="back-btn" data-action="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg> Zurück</button>
+          <div class="panel"><h3>${esc(name)}</h3><p class="psub">Für diesen Spieler liegen keine Daten vor.</p></div>`;
+        $('#seasonLabel').textContent = esc(name);
+        return;
+      }
+
       const active = played.filter(h=>h.rec.attacks>0);
       const best = played.reduce((m,h)=>h.rec.points>m.pts?{pts:h.rec.points,k:h.k}:m,{pts:-1,k:null});
-      const medals = played.filter(h=>h.rec.rank<=3).length;
+      const top3 = played.filter(h=>h.rec.rank<=3).length;
       const sevens = played.filter(h=>h.rec.bonus).length;
       const avg = active.length ? Math.round(active.reduce((s,h)=>s+h.rec.points,0)/active.length) : 0;
       const bestRank = played.length ? Math.min(...played.map(h=>h.rec.rank)) : 0;
-      const cur = idxMap.get(state.current);
-      const maxPts = Math.max(1, ...played.map(h=>h.rec.points));
+      const richRecs = played.filter(h=>typeof h.rec.stars==='number');
+      const totalStars = richRecs.reduce((s,h)=>s+h.rec.stars,0);
+      const relAtt = richRecs.reduce((s,h)=>s+h.rec.attacks,0);
+      const relPoss = richRecs.reduce((s,h)=>s+h.rec.attacks+(h.rec.missed||0),0);
+      const reliability = relPoss ? Math.round(relAtt/relPoss*100) : null;
+      const curRec = idx ? idx.get(state.chrono[state.chrono.length-1]) : null;
 
-      const bars = hist.map(h=>{
-        const isCur = h.k===state.current;
-        if(!h.rec){
-          return `<div class="bar-col"><div class="bar-val">–</div><div class="bar empty" style="height:4px"></div><div class="bar-lab">${shortLabel(h.k)}</div></div>`;
-        }
-        const hgt = Math.max(4, Math.round(h.rec.points/maxPts*100));
-        return `<div class="bar-col ${isCur?'cur':''}"><div class="bar-val">${h.rec.points}</div><div class="bar ${isCur?'cur':''}" style="height:${hgt}%"></div><div class="bar-lab">${shortLabel(h.k)}</div></div>`;
+      // Header-Chips
+      const th = member ? member.th : (richRecs.length?richRecs[richRecs.length-1].rec.th:null);
+      const chips = [];
+      if(th) chips.push(`<span class="tag-chip th">⌂ RH ${th}</span>`);
+      if(member && member.role) chips.push(`<span class="tag-chip role">${esc(member.role)}</span>`);
+      if(member && member.league) chips.push(`<span class="tag-chip">${member.leagueIcon?`<img src="${esc(member.leagueIcon)}" alt="" onerror="this.style.display='none'">`:''}${esc(member.league)}</span>`);
+      if(!member) chips.push(`<span class="tag-chip role">nicht im aktuellen Clan</span>`);
+
+      const sub = curRec
+        ? `Aktuelle Saison: Platz ${curRec.rank} · ${curRec.points} Punkte · ${curRec.attacks}/7${curRec.bonus?' ✓':''}`
+        : 'In der aktuellen Saison nicht dabei';
+
+      const metrics = [
+        {v:played.length, l:'Saisons'},
+        {v:avg||'–', l:'Ø aktiv'},
+        {v:best.k?best.pts:'–', l:'Bestwert'+(best.k?' ('+seasonShort(best.k)+')':'')},
+        {v:bestRank?'#'+bestRank:'–', l:'Bester Rang'},
+        {v:top3, l:'Top 3'},
+        {v:sevens, l:'7/7 Bonus'},
+        {v:richRecs.length?totalStars:'–', l:'Sterne'},
+        {v:reliability!=null?reliability+'%':'–', l:'Zuverlässig.'}
+      ];
+
+      // Aktuellste Detail-Saison (rich)
+      let detailHtml = '';
+      if(richRecs.length){
+        const d = richRecs[richRecs.length-1];
+        const r = d.rec;
+        const sTot = (r.s3+r.s2+r.s1+r.s0)||1;
+        const seg = (c,n)=> n? `<span class="${c}" style="width:${(n/sTot*100).toFixed(1)}%" title="${n}"></span>`:'';
+        const oppMax = Math.max(1, r.up, r.eq, r.down);
+        const hbar = (lab,n)=>`<div class="hbar"><span class="lab">${lab}</span><div class="track"><div class="fill" style="width:${(n/oppMax*100).toFixed(0)}%"></div></div><span class="val">${n}</span></div>`;
+        detailHtml = `
+          <div class="panel">
+            <h3>CWL-Details · ${esc(labelOf(d.k))}</h3>
+            <p class="psub">${r.attacks} Angriffe · ${r.stars} Sterne · Ø ${r.destr}% Zerstörung${r.missed?` · ${r.missed} verpasst`:''}</p>
+            <div class="sd-legend" style="margin-bottom:2px">Sterne-Verteilung</div>
+            <div class="stardist">${seg('sd3',r.s3)}${seg('sd2',r.s2)}${seg('sd1',r.s1)}${seg('sd0',r.s0)}</div>
+            <div class="sd-legend">
+              <span><i class="sd3"></i>3★ ${r.s3}</span><span><i class="sd2"></i>2★ ${r.s2}</span>
+              <span><i class="sd1"></i>1★ ${r.s1}</span><span><i class="sd0"></i>0★ ${r.s0}</span>
+            </div>
+            <div class="sd-legend" style="margin:14px 0 0">Angriffsziele nach Rathaus</div>
+            <div class="hbars">
+              ${hbar('Höheres RH', r.up)}
+              ${hbar('Gleiches RH', r.eq)}
+              ${hbar('Niedriger RH', r.down)}
+            </div>
+          </div>`;
+      }
+
+      // Saison-Tabelle
+      const hasStars = richRecs.length>0;
+      const tabRows = hist.slice().reverse().map(h=>{
+        if(!h.rec) return `<div class="st-row"><div class="st-name muted">${esc(labelOf(h.k))}</div><div class="num muted">–</div><div class="num muted">–</div><div class="num muted">–</div><div class="num muted">–</div></div>`;
+        const r=h.rec;
+        return `<div class="st-row"><div class="st-name">${esc(labelOf(h.k))}</div><div class="num">#${r.rank}</div><div class="num">${r.points}</div><div class="num">${r.attacks}/7</div><div class="num">${typeof r.stars==='number'?r.stars:'–'}</div></div>`;
       }).join('');
 
-      const subParts = [];
-      if(cur){ subParts.push(`Platz ${cur.rank} · ${cur.points} Punkte · ${cur.attacks}/7${cur.bonus?' ✓':''}`); }
-      else subParts.push('In dieser Saison nicht dabei');
+      // Roster-Extras
+      let rosterHtml='';
+      if(member){
+        const ri=[];
+        if(member.trophies!=null) ri.push({l:'Trophäen', v:member.trophies});
+        if(member.bestTrophies!=null) ri.push({l:'Beste Tr.', v:member.bestTrophies});
+        if(member.warStars!=null) ri.push({l:'Kriegssterne', v:member.warStars});
+        if(member.donations!=null) ri.push({l:'Spenden', v:member.donations});
+        if(member.expLevel!=null) ri.push({l:'Level', v:member.expLevel});
+        if(member.clanRank!=null) ri.push({l:'Clan-Rang', v:'#'+member.clanRank});
+        if(ri.length) rosterHtml = `<div class="panel"><h3>Aktueller Account-Status</h3><div class="metrics" style="margin-bottom:0">${ri.map(x=>`<div class="metric"><div class="v">${x.v}</div><div class="l">${esc(x.l)}</div></div>`).join('')}</div></div>`;
+      }
 
-      openModal(`
-        <div class="modal-head">
-          <div>
-            <h2>${esc(name)}</h2>
-            <div class="sub">${subParts.join('')}</div>
+      const initial = esc((name||'?').trim().charAt(0).toUpperCase()||'?');
+      $('#seasonLabel').textContent = esc(name);
+      $('#view').innerHTML = `
+        <button class="back-btn" data-action="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg> Zurück</button>
+        <div class="prof-head">
+          <div class="prof-avatar">${initial}</div>
+          <div class="prof-id">
+            <h1>${esc(name)}</h1>
+            <div class="pid-sub">${esc(sub)}</div>
+            <div class="chip-row">${chips.join('')}</div>
           </div>
-          <button class="icon-btn" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         </div>
-        <div class="modal-body">
-          <div class="m-stats">
-            <div class="m-stat"><div class="v">${best.k?best.pts:'–'}</div><div class="l">Bestwert${best.k?' ('+shortLabel(best.k)+')':''}</div></div>
-            <div class="m-stat"><div class="v">${avg||'–'}</div><div class="l">Ø aktiv</div></div>
-            <div class="m-stat"><div class="v">${bestRank?'#'+bestRank:'–'}</div><div class="l">Bester Rang</div></div>
-            <div class="m-stat"><div class="v">${active.length}</div><div class="l">Saisons aktiv</div></div>
-            <div class="m-stat"><div class="v">${medals}</div><div class="l">Top 3</div></div>
-            <div class="m-stat"><div class="v">${sevens}</div><div class="l">7/7 Bonus</div></div>
+        <div class="metrics">${metrics.map(m=>`<div class="metric"><div class="v">${m.v}</div><div class="l">${esc(m.l)}</div></div>`).join('')}</div>
+        <div class="panel"><h3>Punkte je Saison</h3>${pointsBars(hist, state.chrono[state.chrono.length-1])}</div>
+        <div class="grid2">
+          <div class="panel"><h3>Rang-Verlauf</h3><p class="psub">Niedriger ist besser.</p>${rankChart(hist)}</div>
+          <div class="panel"><h3>Alle Saisons</h3>
+            <div class="seas-tab">
+              <div class="st-row head"><div>Saison</div><div class="num">Rang</div><div class="num">Punkte</div><div class="num">Angr.</div><div class="num">Sterne</div></div>
+              ${tabRows}
+            </div>
+            ${hasStars?'':'<p class="note-inline">Sterne-Daten erst ab Saison „Juni 2.0" verfügbar.</p>'}
           </div>
-          <div class="sub" style="color:var(--muted);font-size:12px;margin-bottom:2px">Punkte je Saison</div>
-          <div class="chart">${bars}</div>
         </div>
-      `);
+        ${detailHtml}
+        ${rosterHtml}`;
     }
 
+    /* ===========================================================
+       View: Clan-Analyse
+    =========================================================== */
+    function aggregatePlayers(){
+      const map = new Map();
+      state.chrono.forEach(k=>{
+        state.seasons[k].players.forEach(p=>{
+          if(!map.has(p.name)) map.set(p.name, {name:p.name, recs:[], total:0, sevens:0, top3:0, best:0, bestKey:null, activeSum:0, activeCount:0});
+          const e=map.get(p.name);
+          e.recs.push({k,p});
+          e.total+=p.points;
+          if(p.bonus) e.sevens++;
+          if(p.rank<=3) e.top3++;
+          if(p.attacks>0){ e.activeSum+=p.points; e.activeCount++; }
+          if(p.points>e.best){ e.best=p.points; e.bestKey=k; }
+        });
+      });
+      const arr=[...map.values()];
+      arr.forEach(e=>{ e.played=e.recs.length; e.avg=e.activeCount?Math.round(e.activeSum/e.activeCount):0; });
+      return arr;
+    }
+
+    function rankListHtml(items, valFmt, subFmt){
+      return '<div class="rank-list">'+items.map((it,i)=>`
+        <div class="rank-item" role="button" tabindex="0" data-name="${esc(it.name)}">
+          <div class="ri-rank">${i+1}</div>
+          <div class="ri-name">${esc(it.name)}${subFmt?`<span class="ri-sub">${subFmt(it)}</span>`:''}</div>
+          <div class="ri-val">${valFmt(it)}</div>
+        </div>`).join('')+'</div>';
+    }
+
+    function distBars(pairs){ // [{label, value}]
+      const max = Math.max(1, ...pairs.map(p=>p.value));
+      return '<div class="chart">'+pairs.map(p=>{
+        const hgt=Math.max(4, Math.round(p.value/max*100));
+        return `<div class="bar-col"><div class="bar-val">${p.value}</div><div class="bar" style="height:${hgt}%"></div><div class="bar-lab">${esc(p.label)}</div></div>`;
+      }).join('')+'</div>';
+    }
+
+    function renderAnalyse(){
+      const agg = aggregatePlayers();
+      const byTotal = agg.slice().sort((a,b)=>b.total-a.total).slice(0,8);
+      const bySevens = agg.filter(a=>a.sevens>0).sort((a,b)=>b.sevens-a.sevens||b.total-a.total).slice(0,8);
+      const byTop3 = agg.filter(a=>a.top3>0).sort((a,b)=>b.top3-a.top3||b.total-a.total).slice(0,8);
+      const byBest = agg.slice().sort((a,b)=>b.best-a.best).slice(0,8);
+      const byConsistency = agg.filter(a=>a.activeCount>=3).sort((a,b)=>b.avg-a.avg).slice(0,8);
+
+      // Clan-Header + Snapshot
+      const c = state.clan && state.clan.clan;
+      const members = (state.clan && state.clan.members) || [];
+      let clanHead = '';
+      if(c){
+        const ths = members.map(m=>m.th).filter(x=>x);
+        const avgTh = ths.length ? (ths.reduce((s,x)=>s+x,0)/ths.length).toFixed(1) : '–';
+        const sumStars = members.reduce((s,m)=>s+(m.warStars||0),0);
+        const sumDon = members.reduce((s,m)=>s+(m.donations||0),0);
+        clanHead = `
+          <div class="panel">
+            <div class="clan-banner">
+              ${c.badge?`<img src="${esc(c.badge)}" alt="" onerror="this.style.display='none'">`:''}
+              <div>
+                <h2>${esc(c.name||'Clan')}</h2>
+                <div class="cb-sub">Level ${c.level||'–'} · ${c.members||members.length} Mitglieder · Kriegsliga: ${esc(c.warLeague||'–')}</div>
+              </div>
+            </div>
+            <div class="metrics" style="margin:16px 0 0">
+              <div class="metric"><div class="v">${c.members||members.length}</div><div class="l">Mitglieder</div></div>
+              <div class="metric"><div class="v">${avgTh}</div><div class="l">Ø Rathaus</div></div>
+              <div class="metric"><div class="v">${sumStars.toLocaleString('de')}</div><div class="l">Kriegssterne</div></div>
+              <div class="metric"><div class="v">${sumDon.toLocaleString('de')}</div><div class="l">Spenden (Saison)</div></div>
+            </div>
+            ${c.description?`<div class="clan-desc">${esc(c.description)}</div>`:''}
+          </div>`;
+      }
+
+      // Rathaus-Verteilung
+      let thDist='';
+      if(members.length){
+        const counts={};
+        members.forEach(m=>{ if(m.th){ counts[m.th]=(counts[m.th]||0)+1; } });
+        const levels=Object.keys(counts).map(Number).sort((a,b)=>a-b);
+        thDist = `<div class="panel"><h3>Rathaus-Verteilung</h3><p class="psub">Aktuelle Clan-Mitglieder</p>${distBars(levels.map(l=>({label:'RH'+l, value:counts[l]})))}</div>`;
+      }
+
+      // Teilnahme je Saison
+      const part = `<div class="panel"><h3>Teilnehmer je Saison</h3>${distBars(state.chrono.map(k=>({label:seasonShort(k), value:state.seasons[k].players.length})))}</div>`;
+
+      // Roster-Ranglisten
+      let rosterBoards='';
+      if(members.length){
+        const top=(field)=> members.filter(m=>m[field]!=null).slice().sort((a,b)=>b[field]-a[field]).slice(0,8).map(m=>({name:m.name, v:m[field], th:m.th}));
+        const don=top('donations'), war=top('warStars'), tro=top('trophies');
+        const mk=(items,fmt)=> '<div class="rank-list">'+items.map((m,i)=>`<div class="rank-item" role="button" tabindex="0" data-name="${esc(m.name)}"><div class="ri-rank">${i+1}</div><div class="ri-name">${esc(m.name)}${m.th?`<span class="ri-sub">RH${m.th}</span>`:''}</div><div class="ri-val">${fmt(m.v)}</div></div>`).join('')+'</div>';
+        rosterBoards = `
+          <div class="grid2">
+            <div class="panel"><h3>🎁 Spenden</h3><p class="psub">Aktuelle Saison</p>${mk(don,v=>v.toLocaleString('de'))}</div>
+            <div class="panel"><h3>⚔️ Kriegssterne</h3><p class="psub">Gesamt (Account)</p>${mk(war,v=>v.toLocaleString('de'))}</div>
+          </div>
+          <div class="panel"><h3>🏆 Trophäen</h3><p class="psub">Aktueller Stand</p>${mk(tro,v=>v.toLocaleString('de'))}</div>`;
+      }
+
+      $('#view').innerHTML = `
+        ${clanHead}
+        <div class="grid2">
+          <div class="panel"><h3>👑 Gesamtpunkte</h3><p class="psub">Über alle Saisons</p>${rankListHtml(byTotal, it=>it.total, it=>it.played+' Saisons')}</div>
+          <div class="panel"><h3>⭐ Meiste 7/7</h3><p class="psub">Volle Angriffszahl</p>${bySevens.length?rankListHtml(bySevens, it=>it.sevens+'×', it=>it.played+' Saisons'):'<p class="psub">—</p>'}</div>
+        </div>
+        <div class="grid2">
+          <div class="panel"><h3>🥇 Meiste Top-3</h3><p class="psub">Podiums-Platzierungen</p>${byTop3.length?rankListHtml(byTop3, it=>it.top3+'×'):'<p class="psub">—</p>'}</div>
+          <div class="panel"><h3>🔥 Bester Einzelwert</h3><p class="psub">Höchste Saison-Punktzahl</p>${rankListHtml(byBest, it=>it.best, it=>seasonShort(it.bestKey))}</div>
+        </div>
+        <div class="panel"><h3>🎯 Konstanz</h3><p class="psub">Ø Punkte (mind. 3 aktive Saisons)</p>${byConsistency.length?rankListHtml(byConsistency, it=>it.avg, it=>it.activeCount+' aktiv'):'<p class="psub">Noch zu wenig Daten.</p>'}</div>
+        ${thDist}
+        ${part}
+        ${rosterBoards}
+        <p class="note-inline" style="text-align:center">Clan-Snapshot${state.clan&&state.clan.generated?' vom '+new Date(state.clan.generated).toLocaleDateString('de'):''} · Tippe auf einen Namen für das Profil.</p>`;
+    }
+
+    /* ===========================================================
+       Info-Modal
+    =========================================================== */
     function openInfo(){
       openModal(`
         <div class="modal-head">
@@ -622,22 +987,21 @@
             <li><span class="ic">+5</span><div><b>Bonus:</b> +5 Punkte bei genau 7 von 7 ausgeführten Angriffen.</div></li>
             <li><span class="ic">≠</span><div><b>Zweitaccounts</b> werden einzeln gewertet und nicht zusammengelegt.</div></li>
             <li><span class="ic">▲</span><div><b>Pfeile</b> zeigen die Rangveränderung gegenüber der Vorsaison; <b>NEU</b> = erstmals dabei.</div></li>
-            <li><span class="ic">☞</span><div><b>Tipp:</b> Auf einen Spieler tippen öffnet seinen Saison-Verlauf.</div></li>
+            <li><span class="ic">☞</span><div><b>Tipp:</b> Auf einen Spieler tippen öffnet sein vollständiges Profil mit Verlauf und Analyse.</div></li>
           </ul>
           <div style="color:var(--muted-2);font-size:11px;margin-top:14px">* Ø Punkte zählt nur Spieler mit mindestens einem Angriff.</div>
         </div>
       `);
     }
 
-    /* ---------- Modal-Mechanik ---------- */
     let lastFocus = null;
     function openModal(html){
       closeModal();
       const bd = document.createElement('div');
-      bd.className = 'backdrop'; bd.id = 'backdrop';
+      bd.className='backdrop'; bd.id='backdrop';
       bd.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
       document.body.appendChild(bd);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow='hidden';
       lastFocus = document.activeElement;
       bd.addEventListener('click', e=>{ if(e.target===bd) closeModal(); });
       bd.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', closeModal));
@@ -648,65 +1012,50 @@
       if(bd){ bd.remove(); document.body.style.overflow=''; if(lastFocus&&lastFocus.focus) lastFocus.focus(); }
     }
 
-    /* ---------- Events ---------- */
-    const searchEl = $('#search');
-    searchEl.addEventListener('input', e=>{
-      state.search = e.target.value.trim();
-      $('#clearSearch').classList.toggle('show', !!state.search);
-      renderPodium(); renderList();
+    /* ===========================================================
+       Delegierte Events auf #view
+    =========================================================== */
+    const view = $('#view');
+    function openName(el){ nav('#p/'+encodeURIComponent(el.dataset.name)); }
+    view.addEventListener('click', e=>{
+      const a = e.target.closest('[data-action]');
+      if(a){
+        const act=a.dataset.action;
+        if(act==='clearSearch'){ const s=$('#search'); if(s){ state.search=''; s.value=''; $('#clearSearch').classList.remove('show'); s.focus(); renderPodium(); renderList(); } }
+        else if(act==='info'){ openInfo(); }
+        else if(act==='back'){ if(history.length>1) history.back(); else nav('#'); }
+        return;
+      }
+      const seasonEl = e.target.closest('[data-season]');
+      if(seasonEl){ selectSeason(seasonEl.dataset.season); return; }
+      const sortEl = e.target.closest('[data-sort]');
+      if(sortEl){ const k=sortEl.dataset.sort; if(state.sort.key===k) state.sort.dir*=-1; else state.sort={key:k, dir:(k==='name')?1:-1}; syncSortHeaders(); renderPodium(); renderList(); return; }
+      const filterEl = e.target.closest('[data-filter]');
+      if(filterEl){ state.filter=filterEl.dataset.filter; document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active', x===filterEl)); renderPodium(); renderList(); return; }
+      const navEl = e.target.closest('[data-nav]');
+      if(navEl && view.contains(navEl)){ nav(navEl.dataset.nav); return; }
+      const nameEl = e.target.closest('[data-name]');
+      if(nameEl){ openName(nameEl); return; }
     });
-    $('#clearSearch').addEventListener('click', ()=>{
-      state.search=''; searchEl.value=''; $('#clearSearch').classList.remove('show');
-      searchEl.focus(); renderPodium(); renderList();
+    view.addEventListener('input', e=>{
+      if(e.target.id==='search'){ state.search=e.target.value.trim(); $('#clearSearch').classList.toggle('show', !!state.search); renderPodium(); renderList(); }
+    });
+    view.addEventListener('keydown', e=>{
+      if(e.key!=='Enter' && e.key!==' ') return;
+      const nameEl = e.target.closest('[data-name]'); if(!nameEl) return;
+      e.preventDefault(); openName(nameEl);
     });
 
-    document.querySelectorAll('.chip').forEach(c=>{
-      c.addEventListener('click', ()=>{
-        state.filter = c.dataset.filter;
-        document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active', x===c));
-        renderPodium(); renderList();
-      });
-    });
-
-    document.querySelectorAll('.row.head .th').forEach(th=>{
-      th.addEventListener('click', ()=>{
-        const key = th.dataset.sort;
-        if(state.sort.key===key){ state.sort.dir *= -1; }
-        else { state.sort.key = key; state.sort.dir = (key==='name') ? 1 : -1; }
-        syncSortHeaders(); renderPodium(); renderList();
-      });
-    });
-
-    // Delegierte Klicks auf Zeilen & Podium → Spieler-Detail
-    function bindRowOpen(container){
-      container.addEventListener('click', e=>{
-        const el = e.target.closest('[data-name]'); if(!el) return;
-        openPlayer(el.dataset.name);
-      });
-      container.addEventListener('keydown', e=>{
-        if(e.key!=='Enter' && e.key!==' ') return;
-        const el = e.target.closest('[data-name]'); if(!el) return;
-        e.preventDefault(); openPlayer(el.dataset.name);
-      });
-    }
-    bindRowOpen($('#list'));
-    bindRowOpen($('#podium'));
-
-    $('#infoBtn').addEventListener('click', openInfo);
-    $('#infoBtn2').addEventListener('click', openInfo);
+    // Tabs (außerhalb #view)
+    document.querySelectorAll('#tabs [data-nav]').forEach(b=> b.addEventListener('click', ()=> nav(b.dataset.nav)));
 
     document.addEventListener('keydown', e=>{
       if(e.key==='Escape'){
         if($('#backdrop')) closeModal();
-        else if(state.search){ state.search=''; searchEl.value=''; $('#clearSearch').classList.remove('show'); renderPodium(); renderList(); }
-      }else if(e.key==='/' && document.activeElement!==searchEl){
-        e.preventDefault(); searchEl.focus();
+        else if(state.view==='board' && state.search){ state.search=''; const s=$('#search'); if(s)s.value=''; const c=$('#clearSearch'); if(c)c.classList.remove('show'); renderPodium(); renderList(); }
+      }else if(e.key==='/' && document.activeElement!==$('#search')){
+        const s=$('#search'); if(s){ e.preventDefault(); s.focus(); }
       }
-    });
-
-    window.addEventListener('hashchange', ()=>{
-      const k = (location.hash||'').replace('#','');
-      if(state.data[k] && k!==state.current) selectMonth(k, false);
     });
 
     loadAll();
