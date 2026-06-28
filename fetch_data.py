@@ -112,23 +112,25 @@ def build_clan_snapshot():
     for i, m in enumerate(ml):
         print(f"  Mitglied {i + 1}/{len(ml)}: {m.get('name')}")
         detail = get(f"/players/{enc(m['tag'])}") or {}
-        league = m.get("league") or {}
-        icons = league.get("iconUrls", {}) or {}
+        # Neues Ranglisten-Ligasystem (leagueTier), NICHT das alte/Legacy "league".
+        tier = m.get("leagueTier") or {}
+        ticons = tier.get("iconUrls", {}) or {}
         members.append({
             "tag": m["tag"],
             "name": m["name"],
             "th": m.get("townHallLevel"),
             "role": ROLE_DE.get(m.get("role"), m.get("role")),
             "roleRaw": m.get("role"),
-            "league": league.get("name"),
-            "leagueIcon": icons.get("tiny") or icons.get("small"),
+            "league": tier.get("name"),
+            "leagueIcon": ticons.get("small") or ticons.get("large"),
             "trophies": m.get("trophies"),
             "donations": m.get("donations"),
             "donationsReceived": m.get("donationsReceived"),
             "expLevel": m.get("expLevel"),
             "clanRank": m.get("clanRank"),
             "warStars": detail.get("warStars"),
-            "bestTrophies": detail.get("bestTrophies"),
+            # Best-Trophäen gibt es nur als Legacy-Wert aus dem alten System.
+            "legacyBestTrophies": detail.get("bestTrophies"),
             "attackWins": detail.get("attackWins"),
             "warPreference": detail.get("warPreference"),
         })
