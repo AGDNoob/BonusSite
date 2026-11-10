@@ -216,6 +216,22 @@
     .note{padding:14px 16px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); line-height:1.6}
     .note button{background:none;border:0;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline}
 
+    .season-placeholder{position:relative; overflow:hidden; min-height:300px; padding:clamp(28px,7vw,58px);
+      display:grid; align-content:center; background:var(--panel); border:1px solid var(--line);
+      border-radius:var(--radius-lg); box-shadow:var(--shadow)}
+    .season-placeholder::after{content:"07"; position:absolute; right:clamp(18px,6vw,54px); top:50%;
+      transform:translateY(-52%); font-size:clamp(120px,26vw,240px); line-height:1; font-weight:900;
+      letter-spacing:-.09em; color:var(--accent); opacity:.055; pointer-events:none}
+    .placeholder-copy{position:relative; z-index:1; max-width:570px}
+    .placeholder-status{display:inline-flex; align-items:center; gap:9px; color:var(--muted); font-size:12px;
+      font-weight:750; letter-spacing:.08em; text-transform:uppercase}
+    .placeholder-status::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--muted-2);
+      box-shadow:0 0 0 5px var(--badge-n)}
+    .season-placeholder h2{margin:18px 0 10px; max-width:520px; font-size:clamp(25px,6vw,42px);
+      line-height:1.08; letter-spacing:-.035em}
+    .season-placeholder p{margin:0; color:var(--muted); font-size:clamp(14px,3.5vw,17px); line-height:1.65}
+    .placeholder-foot{margin-top:24px; padding-top:18px; border-top:1px solid var(--line); font-size:12px !important}
+
     /* Skeleton */
     .sk{height:57px; border-bottom:1px solid var(--line);
       background:linear-gradient(90deg,var(--card) 25%,var(--card-hover) 50%,var(--card) 75%);
@@ -472,7 +488,13 @@
           const r = await fetch('data/'+(s.file||('seasons/'+s.key+'.json')), {cache:'no-store'});
           if(!r.ok) return null;
           const j = await r.json();
-          return {key:s.key, label:j.month||s.label||seasonShort(s.key), players:j.players||[]};
+          return {
+            key:s.key,
+            label:j.month||s.label||seasonShort(s.key),
+            players:j.players||[],
+            status:j.status||'available',
+            message:j.message||''
+          };
         }catch(e){ return null; }
       }));
       loaded.forEach(res=>{
@@ -529,6 +551,21 @@
 
       const pills = [...state.chrono].reverse()
         .map(k=>`<button class="month-pill ${k===key?'active':''}" data-season="${esc(k)}">${esc(labelOf(k))}</button>`).join('');
+
+      const current = state.seasons[key];
+      if(current.status==='unavailable'){
+        $('#view').innerHTML = `
+          <nav class="months" id="months" aria-label="Saison wählen">${pills}</nav>
+          <section class="season-placeholder" aria-labelledby="placeholderTitle">
+            <div class="placeholder-copy">
+              <div class="placeholder-status">Keine historischen Detaildaten</div>
+              <h2 id="placeholderTitle">Für ${esc(labelOf(key))} liegt keine belastbare Rangliste vor.</h2>
+              <p>${esc(current.message||'Die offizielle API stellt rückwirkend keine vollständigen Spieler- und Angriffsdaten für diese CWL bereit.')}</p>
+              <p class="placeholder-foot">Der Monat bleibt bewusst als Lücke sichtbar. Es werden keine Werte anderer Monate als Daten dieses Monats ausgegeben.</p>
+            </div>
+          </section>`;
+        return;
+      }
 
       $('#view').innerHTML = `
         <nav class="months" id="months" aria-label="Saison wählen">${pills}</nav>
@@ -611,7 +648,12 @@
     function movementFor(name){
       const idx = state.chrono.indexOf(state.curSeason);
       if(idx<=0) return null;
-      const prevKey = state.chrono[idx-1];
+      let prevKey = null;
+      for(let i=idx-1;i>=0;i--){
+        const candidate = state.seasons[state.chrono[i]];
+        if(candidate && candidate.status!=='unavailable'){ prevKey=state.chrono[i]; break; }
+      }
+      if(!prevKey) return null;
       const m = state.nameIdx.get(name);
       const cur = m && m.get(state.curSeason);
       const prev = m && m.get(prevKey);

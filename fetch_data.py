@@ -164,6 +164,16 @@ def build_season(season_key, label):
     if not group:
         print("Keine aktive CWL gefunden.")
         return None
+    requested_month = re.match(r"^(\d{4}-\d{2})", season_key)
+    api_season = group.get("season", "")
+    api_month = api_season[:7] if re.match(r"^\d{4}-\d{2}", api_season) else ""
+    if not requested_month or not api_month or requested_month.group(1) != api_month:
+        print(
+            f"Saisonabweichung: angefordert {season_key}, "
+            f"API liefert {api_season or 'keine Saisonangabe'}."
+        )
+        print("Abbruch, damit aktuelle CWL-Daten nicht unter einem falschen Monat gespeichert werden.")
+        return None
     war_tags = [w for r in group.get("rounds", []) for w in r.get("warTags", []) if w and w != "#0"]
     print(f"  {len(war_tags)} Kriege in der Gruppe")
 

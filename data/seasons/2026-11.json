@@ -1,0 +1,31 @@
+{
+  "month": "November 2026",
+  "key": "2026-11",
+  "generated": "2026-11-10T16:57:39+00:00",
+  "players": [
+    {"rank": 1, "name": "Flo :D", "tag": "#P22P9U2QY", "th": 17, "points": 203, "attacks": 7, "missed": 0, "bonus": true, "stars": 19, "s3": 5, "s2": 2, "s1": 0, "s0": 0, "destr": 94.4, "up": 3, "eq": 3, "down": 1},
+    {"rank": 2, "name": "MelloKostello", "tag": "#2GVJYVVC9", "th": 17, "points": 193, "attacks": 7, "missed": 0, "bonus": true, "stars": 17, "s3": 3, "s2": 4, "s1": 0, "s0": 0, "destr": 95.0, "up": 4, "eq": 3, "down": 0},
+    {"rank": 3, "name": "Max", "tag": "#YJRRJ0LU", "th": 18, "points": 191, "attacks": 7, "missed": 0, "bonus": true, "stars": 19, "s3": 5, "s2": 2, "s1": 0, "s0": 0, "destr": 94.1, "up": 0, "eq": 7, "down": 0},
+    {"rank": 4, "name": "DerOpa", "tag": "#GVQVCQCRL", "th": 18, "points": 184, "attacks": 7, "missed": 0, "bonus": true, "stars": 21, "s3": 7, "s2": 0, "s1": 0, "s0": 0, "destr": 100.0, "up": 0, "eq": 2, "down": 5},
+    {"rank": 5, "name": "Simon", "tag": "#P8LJR9CUJ", "th": 16, "points": 158, "attacks": 6, "missed": 0, "bonus": false, "stars": 18, "s3": 6, "s2": 0, "s1": 0, "s0": 0, "destr": 100.0, "up": 0, "eq": 2, "down": 4},
+    {"rank": 6, "name": "El Cid", "tag": "#GRQ299CG2", "th": 16, "points": 125, "attacks": 6, "missed": 1, "bonus": false, "stars": 11, "s3": 1, "s2": 3, "s1": 2, "s0": 0, "destr": 79.7, "up": 3, "eq": 3, "down": 0},
+    {"rank": 7, "name": "Skippa", "tag": "#YGJG2YUV", "th": 16, "points": 125, "attacks": 4, "missed": 0, "bonus": false, "stars": 11, "s3": 3, "s2": 1, "s1": 0, "s0": 0, "destr": 99.8, "up": 3, "eq": 0, "down": 1},
+    {"rank": 8, "name": "D4RK", "tag": "#L9YLJ8VY0", "th": 16, "points": 116, "attacks": 4, "missed": 0, "bonus": false, "stars": 10, "s3": 2, "s2": 2, "s1": 0, "s0": 0, "destr": 95.8, "up": 3, "eq": 0, "down": 1},
+    {"rank": 9, "name": "fynnchi", "tag": "#YPG8902YQ", "th": 16, "points": 116, "attacks": 6, "missed": 1, "bonus": false, "stars": 15, "s3": 3, "s2": 3, "s1": 0, "s0": 0, "destr": 84.7, "up": 0, "eq": 2, "down": 4},
+    {"rank": 10, "name": "LaysxMarvin", "tag": "#Q9VYL9Q8U", "th": 16, "points": 100, "attacks": 4, "missed": 0, "bonus": false, "stars": 8, "s3": 1, "s2": 2, "s1": 1, "s0": 0, "destr": 75.8, "up": 3, "eq": 1, "down": 0},
+    {"rank": 11, "name": "maik", "tag": "#2CJG9LPV0", "th": 16, "points": 97, "attacks": 6, "missed": 0, "bonus": false, "stars": 11, "s3": 2, "s2": 2, "s1": 1, "s0": 1, "destr": 72.2, "up": 1, "eq": 2, "down": 3},
+    {"rank": 12, "name": "Yvii", "tag": "#GLQCCGPPY", "th": 16, "points": 96, "attacks": 5, "missed": 0, "bonus": false, "stars": 13, "s3": 3, "s2": 2, "s1": 0, "s0": 0, "destr": 94.0, "up": 0, "eq": 1, "down": 4},
+    {"rank": 13, "name": "MagicDragon", "tag": "#9CGULLYJL", "th": 18, "points": 95, "attacks": 4, "missed": 0, "bonus": false, "stars": 10, "s3": 2, "s2": 2, "s1": 0, "s0": 0, "destr": 87.8, "up": 0, "eq": 4, "down": 0},
+    {"rank": 14, "name": "Mercedes", "tag": "#Q9YQRRYJJ", "th": 17, "points": 82, "attacks": 4, "missed": 1, "bonus": false, "stars": 8, "s3": 0, "s2": 4, "s1": 0, "s0": 0, "destr": 81.8, "up": 2, "eq": 2, "down": 0},
+    {"rank": 15, "name": "focknhanse", "tag": "#PVUCU8JG", "th": 16, "points": 79, "attacks": 3, "missed": 0, "bonus": false, "stars": 7, "s3": 1, "s2": 2, "s1": 0, "s0": 0, "destr": 75.3, "up": 2, "eq": 1, "down": 0},
+    {"rank": 16, "name": "Luap130", "tag": "#QGLQ8G0UP", "th": 16, "points": 76, "attacks": 3, "missed": 0, "bonus": false, "stars": 9, "s3": 3, "s2": 0, "s1": 0, "s0": 0, "destr": 100.0, "up": 0, "eq": 1, "down": 2},
+    {"rank": 17, "name": "Mamadragon", "tag": "#GCY009JCG", "th": 17, "points": 67, "attacks": 4, "missed": 0, "bonus": false, "stars": 7, "s3": 0, "s2": 3, "s1": 1, "s0": 0, "destr": 60.2, "up": 2, "eq": 2, "down": 0},
+    {"rank": 18, "name": "LucaGaming", "tag": "#9QURLL8CC", "th": 17, "points": 58, "attacks": 4, "missed": 0, "bonus": false, "stars": 5, "s3": 0, "s2": 1, "s1": 3, "s0": 0, "destr": 75.0, "up": 1, "eq": 3, "down": 0},
+    {"rank": 19, "name": "Reytoz", "tag": "#2Y98J080Y", "th": 18, "points": 56, "attacks": 2, "missed": 1, "bonus": false, "stars": 6, "s3": 2, "s2": 0, "s1": 0, "s0": 0, "destr": 100.0, "up": 0, "eq": 1, "down": 1},
+    {"rank": 20, "name": "jresident1", "tag": "#200RGVU99", "th": 18, "points": 52, "attacks": 3, "missed": 0, "bonus": false, "stars": 6, "s3": 0, "s2": 3, "s1": 0, "s0": 0, "destr": 82.0, "up": 0, "eq": 2, "down": 1},
+    {"rank": 21, "name": "Timon", "tag": "#28Y8Y2CV2", "th": 17, "points": 45, "attacks": 2, "missed": 0, "bonus": false, "stars": 4, "s3": 0, "s2": 2, "s1": 0, "s0": 0, "destr": 80.0, "up": 2, "eq": 0, "down": 0},
+    {"rank": 22, "name": "<<<PANDEMIC>>>", "tag": "#Q0QQ8VUU8", "th": 16, "points": 0, "attacks": 0, "missed": 1, "bonus": false, "stars": 0, "s3": 0, "s2": 0, "s1": 0, "s0": 0, "destr": 0, "up": 0, "eq": 0, "down": 0},
+    {"rank": 23, "name": "harryy.", "tag": "#QGLG2JRGJ", "th": 16, "points": 0, "attacks": 0, "missed": 1, "bonus": false, "stars": 0, "s3": 0, "s2": 0, "s1": 0, "s0": 0, "destr": 0, "up": 0, "eq": 0, "down": 0},
+    {"rank": 24, "name": "tomy kingkasten", "tag": "#9JVQUPJP", "th": 16, "points": 0, "attacks": 0, "missed": 1, "bonus": false, "stars": 0, "s3": 0, "s2": 0, "s1": 0, "s0": 0, "destr": 0, "up": 0, "eq": 0, "down": 0}
+  ]
+}

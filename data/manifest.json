@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-28T17:00:49+00:00",
+  "generated": "2026-11-10T16:57:55+00:00",
   "clan": "MagicDragons",
   "seasons": [
     {
@@ -37,6 +37,36 @@
       "label": "Juni 2.0",
       "file": "seasons/2026-06-2.json",
       "players": 34
+    },
+    {
+      "key": "2026-07",
+      "label": "Juli 2026",
+      "file": "seasons/2026-07.json",
+      "players": 0
+    },
+    {
+      "key": "2026-08",
+      "label": "August 2026",
+      "file": "seasons/2026-08.json",
+      "players": 32
+    },
+    {
+      "key": "2026-09",
+      "label": "September 2026",
+      "file": "seasons/2026-09.json",
+      "players": 0
+    },
+    {
+      "key": "2026-10",
+      "label": "Oktober 2026",
+      "file": "seasons/2026-10.json",
+      "players": 0
+    },
+    {
+      "key": "2026-11",
+      "label": "November 2026",
+      "file": "seasons/2026-11.json",
+      "players": 24
     }
   ]
 }
